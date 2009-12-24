@@ -1,0 +1,28 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   i18n_domain="zojax.content.discussion">
+
+  <!-- recent comment email notifications -->
+  <adapter 
+     name="comments"
+     factory=".notifications.CommentsNotification" />
+
+  <adapter 
+     name="comments"
+     for="zojax.content.space.interfaces.IContentSpace"
+     factory=".notifications.CommentsNotification" />
+
+  <class class=".notifications.CommentsNotification">
+    <require
+       permission="zope.View"
+       interface=".interfaces.ICommentsNotification" />
+  </class>
+
+  <subscriber handler=".notifications.commentAdded" />
+  <subscriber handler=".notifications.discussibleAdded" />
+
+  <utility
+     name="comments"
+     factory=".notifications.CommentsNotificationDescription" />
+
+</configure>

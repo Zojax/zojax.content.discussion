@@ -1,0 +1,112 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.content.discussion">
+
+  <include file="permissions.zcml" />
+
+  <zojax:extension
+     name="discussion"
+     title="Discussion"
+     description="Simple content discussions."
+     for=".interfaces.IDiscussible"
+     schema=".interfaces.IContentDiscussion"
+     class=".extension.ContentDiscussionExtension"
+     permission="zojax.ModifyContent">
+
+    <require
+       permission="zojax.AddComment"
+       attributes="add" />
+
+    <require
+       permission="zope.View"
+       attributes="status"
+       interface="zojax.content.type.interfaces.IItem
+                  zope.app.container.interfaces.IReadContainer" />
+    <require
+       permission="zojax.ModifyContent"
+       attributes="remove"
+       interface="zope.app.container.interfaces.IWriteContainer" />
+  </zojax:extension>
+
+  <subscriber handler=".extension.commentAddedHandler" />
+  <subscriber handler=".extension.commentRemovedHandler" />
+  <subscriber handler=".extension.commentModifiedHandler" />
+
+  <subscriber handler=".extension.extensionModifiedEvent" />
+  <subscriber handler=".extension.discussibleContentCreated" />
+  <subscriber handler=".extension.discussibleContentRemoved" />
+
+  <!-- comment -->
+  <zojax:content
+     title="Comment"
+     name="discussion.comment"
+     schema=".interfaces.ISimpleComment"
+     class=".comment.Comment"
+     description="Discussion comment."
+     type="zojax.content.type.interfaces.IInactiveType"
+     permission="zojax.AddComment" />
+
+  <class class=".comment.Comment">
+    <allow interface=".interfaces.ISimpleComment
+          .interfaces.IThreadedComment" />
+    <require set_schema=".interfaces.ISimpleComment"
+             permission="zojax.ModifyContent" />
+  </class>
+
+  <subscriber handler=".comment.commentRemovedHandler" />
+
+  <!-- recent comments portlet -->
+  <zojax:portlet
+     title="Recent comments"
+     name="portlet.recentcomments"
+     class=".portlet.RecentCommentsPortlet"
+     schema=".interfaces.IRecentCommentsPortlet" />
+
+  <!-- recent comments rss feed -->
+  <adapter
+     name="comments"
+     factory=".feeds.CommentsFeed" />
+
+  <class class=".feeds.CommentsFeed">
+    <require
+       permission="zope.View"
+       interface="zojax.content.feeds.interfaces.IFeed" />
+  </class>
+
+  <adapter
+     name="comments"
+     factory=".feeds.ContentCommentsFeed" />
+
+  <class class=".feeds.ContentCommentsFeed">
+    <require
+       permission="zope.View"
+       interface="zojax.content.feeds.interfaces.IFeed" />
+  </class>
+
+  <!-- catalog -->
+  <include file="catalog.zcml" />
+
+  <!-- activity -->
+  <include file="activity.zcml" />
+
+  <!-- email notifications -->
+  <include file="notifications.zcml" />
+
+  <!-- top contributors -->
+  <include file="topcontributors.zcml" />
+
+  <!-- browser view -->
+  <include package=".browser" />
+
+  <!-- translations -->
+  <i18n:registerTranslations directory="locales"/>
+  
+  <!-- generations -->
+  <utility
+     name="zojax.content.discussion"
+     provides="zope.app.generations.interfaces.ISchemaManager"
+     component=".generations.schemaManager" />
+
+</configure>

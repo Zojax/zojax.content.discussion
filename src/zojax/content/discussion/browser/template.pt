@@ -1,0 +1,9 @@
+<h4><tal:block content="view/author"/> replied to 
+  <a tal:attributes="href view/url"
+     tal:content="view/content/title|view/content/__name__"></a></h4>
+<br />
+Comment:
+<div tal:content="structure view/context0"></div>
+<br />
+<hr />
+<a tal:attributes="href string:${view/url}#comments">View comments</a>

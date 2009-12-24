@@ -1,0 +1,95 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zojax.content.discussion">
+
+  <zojax:pageelement
+     name="content.discussion"
+     for="..interfaces.IContentDiscussionAware"
+     template="commentselement.pt"
+     class=".comments.CommentsPageElement"
+     manager="zojax.content.browser.interfaces.IContentBottom"
+     weight="9999" />
+
+  <zojax:pagelet
+     type="pagelet"
+     name="content.discussion"
+     for="..interfaces.IContentDiscussionAware"
+     template="comments.pt"
+     class=".comments.Comments" />
+
+  <zojax:pagelet
+     type="pagelet"
+     name="content.discussion.reply"
+     for="..interfaces.IContentDiscussionAware"
+     template="commentadd.pt"
+     class=".post.PostCommentForm" />
+
+  <zojax:pagelet
+     name="postcomment.html"
+     for="..interfaces.IContentDiscussionAware"
+     class=".post.PostComment"
+     permission="zojax.AddComment" />
+
+  <zojax:pagelet
+     type="form.viewspaceInfo"
+     for=".post.PostComment"
+     template="commentreply.pt" />
+
+  <zojax:pagelet
+     type="pagelet"
+     for="..interfaces.IComment"
+     template="comment.pt"
+     class=".comment.CommentView"
+     permission="zope.Public" />
+
+  <!-- edit form step -->
+  <zojax:pagelet
+     name="content.discussion"
+     type="form.subform"
+     for="..interfaces.IDiscussible
+          zojax.content.forms.interfaces.IContentStep"
+     class=".edit.ContentDiscussonEdit"
+     weight="9999" />
+
+  <zojax:pagelet
+     name="open"
+     type="pagelet"
+     for="..interfaces.IDiscussible
+          .edit.ContentDiscussonEdit * zojax.widget.radio.interfaces.ITermItem"
+     template="edititem.pt" />
+
+  <zojax:pagelet
+     name="managediscussion.html"
+     for="zojax.content.forms.interfaces.IContentStep"
+     template="manage.pt"
+     class=".manage.ManageDiscussion"
+     permission="zojax.ModifyContent" />
+
+  <!-- recent comments portlet view -->
+  <zojax:pagelet
+     type="portlet.view"
+     template="recentcomments.pt"
+     for="..interfaces.IRecentCommentsPortlet" />
+
+  <!-- notification email -->
+  <zojax:mailtemplate
+     for="* ..interfaces.ISimpleComment"
+     contentType="text/html"
+     template="template.pt"
+     class=".template.CommentNotificationMail"
+     provides="zojax.content.notifications.interfaces.INotificationMailTemplate" />
+
+  <!-- icons -->
+  <browser:icon
+     name="zmi_icon"
+     file="comments.png"
+     for="..interfaces.ICommentsRSSFeed" />
+
+  <!-- styles -->
+  <zojax:resourceinclude
+     name="zojax-content-discussion.css" library="zojax"
+     type="stylesheet" file="styles.css" filetype="zrt" />
+
+</configure>

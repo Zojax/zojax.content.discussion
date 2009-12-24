@@ -1,0 +1,23 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.content.discussion">
+
+  <permission
+     id="zojax.AddComment"
+     title="Add content comments"
+     description="Allow add comments in content discussion." />
+
+  <!-- permissions -->
+  <zojax:permission
+     permission="zojax.AddComment"
+     category="zojax.content.permissions.interfaces.IAddPermission" />
+
+  <zojax:contentpermission
+     for="zojax.content.space.interfaces.IContentSpace"
+     permission="zojax.AddComment"
+     managepermission="zojax.ManageContentPermission"
+     category="zojax.content.permissions.interfaces.IAddPermission" />
+
+</configure>

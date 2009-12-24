@@ -1,0 +1,30 @@
+<h2>Manage discussion</h2>
+
+<tal:block define="comments python:list(view.listComments())">
+  <table class="wide" tal:condition="comments">
+    <tbody>
+      <tr tal:repeat="comment view/listComments">
+	<td width="1%">
+	  <input type="checkbox" name="commentIds:list"
+		 tal:attributes="value comment/__name__" />
+	</td>
+	<td>&nbsp;</td>
+	<td tal:attributes="class python:
+			    repeat['comment'].odd() and 'odd' or 'even'"
+	    tal:content="structure comment/@@pagelet"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <tal:block tal:condition="not:comments">
+    There are no comments for this content.
+  </tal:block>
+
+  <div class="z-form-controls">
+    <hr />
+    <input type="submit" value="Back" name="content.discussion.back"
+	   class="z-form-button" />
+    <input type="submit" value="Remove" name="content.discussion.remove"
+	   class="z-form-removebutton" tal:condition="comments" />
+  </div>
+</tal:block>

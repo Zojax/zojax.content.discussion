@@ -1,0 +1,6 @@
+<tal:block tal:repeat="info view/comments">
+<div tal:define="comment python:info[1]"
+     tal:content="structure comment/@@pagelet"
+     tal:attributes="class python:repeat['info'].odd() and 'even' or 'odd';
+		     style python:'margin-left: %0.2fem'%(info[0]*1.75)"/>
+</tal:block>
