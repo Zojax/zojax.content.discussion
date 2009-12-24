@@ -1,0 +1,25 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zcml="http://namespaces.zope.org/zcml"
+   zcml:condition="installed zojax.content.activity"
+   i18n_domain="zojax.content.discussion">
+
+  <class class=".activity.CommentActivityRecord">
+    <require
+       permission="zope.Public"
+       interface=".interfaces.ICommentActivityRecord
+                  zojax.activity.interfaces.IActivityRecord" />
+  </class>
+
+  <utility
+     name="comment"
+     factory=".activity.CommentActivityRecordDescription" />
+
+  <adapter
+     name="commentId"
+     factory=".activity.CommentIdIndex" />
+
+  <subscriber handler=".activity.commentAddedHandler" />
+  <subscriber handler=".activity.commentRemovedHandler" />
+
+</configure>

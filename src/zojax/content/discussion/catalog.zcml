@@ -1,0 +1,18 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <class class=".catalog.CommentsCatalog">
+    <require
+       permission="zope.Public"
+       interface="zope.app.catalog.interfaces.ICatalogQuery" />
+
+    <require
+       permission="zope.ManageServices"
+       interface="zope.app.catalog.interfaces.ICatalogEdit
+		              zope.app.container.interfaces.IContainer" />
+  </class>
+
+  <subscriber handler=".catalog.commentAdded" />
+  <subscriber handler=".catalog.commentRemoved" />
+  <subscriber handler=".catalog.handleCatalogAdded" />
+
+</configure>

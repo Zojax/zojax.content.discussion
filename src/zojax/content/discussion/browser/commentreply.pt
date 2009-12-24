@@ -1,0 +1,3 @@
+<input type="hidden" name="replyto" tal:attributes="value request/replyto" />
+<div class="even" tal:content="structure context/replyto/@@pagelet" />
+<br />

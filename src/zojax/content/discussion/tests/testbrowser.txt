@@ -1,0 +1,601 @@
+=============
+Browser tests
+=============
+
+    >>> from zope import interface, component, event
+    >>> from zope.testbrowser.testing import Browser
+    >>> from zope.securitypolicy.interfaces import IPrincipalPermissionManager
+    >>> from zojax.content.discussion import interfaces
+
+    >>> root = getRootFolder()
+
+    >>> admin = Browser()
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+    >>> admin.handleErrors = False
+
+    >>> user = Browser()
+    >>> user.addHeader("Authorization", "Basic user:userpw")
+    >>> user.handleErrors = False
+
+
+Enable discussion
+-----------------
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> admin.getLink('Presentation').click()
+    Traceback (most recent call last):
+    ...
+    LinkNotFoundError
+
+    >>> sync()
+
+    >>> content = getRootFolder()['content']
+    >>> interfaces.IDiscussible.providedBy(content)
+    False
+
+    >>> interface.alsoProvides(content, interfaces.IDiscussible)
+
+    >>> admin.reload()
+    >>> admin.getLink('Content').click()
+    >>> admin.getControl(name="content.discussion.widgets.status:list").value = ['open']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+    >>> admin.getLink('View').click()
+
+    >>> print admin.contents
+    <html>
+    ...
+    <div class="z-content-discussion">
+    ...<h1 class="z-form-label">Discuss</h1>...
+    </div>
+    ...
+    </html>
+
+
+Auto enable discussion for content
+
+    >>> from zope.lifecycleevent import ObjectCreatedEvent
+    >>> from zojax.content.discussion.tests.tests import Content
+
+    >>> content1 = Content()
+    >>> event.notify(ObjectCreatedEvent(content1))
+    >>> interface.directlyProvides(content1, interfaces.IOpenDiscussible)
+    >>> root['content1'] = content1
+
+    >>> interfaces.IContentDiscussion(content1).status
+    1
+
+
+Add comment
+-----------
+
+    >>> sync()
+
+    >>> admin.open('http://localhost/content/')
+    >>> admin.getControl('Post your comment').click()
+
+    >>> print admin.contents
+    <html>
+    ...Please fix indicated errors...
+    </html>
+
+    >>> admin.getControl('Comment').value = u'Test comment from admin'
+    >>> admin.getControl('Post your comment').click()
+
+    >>> admin.open('http://localhost/content/')
+    >>> print admin.contents
+    <html>
+    ...
+    ...<div class="z-comment">
+    <a name="comment001"></a>
+      <table>
+        <tbody>
+          <tr>
+          <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+            at
+            ...
+        <a href="postcomment.html?replyto=001">Reply</a>
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from admin</div>       
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    ...
+    </html>
+
+
+    >>> user.open('http://localhost/content/')
+    >>> user.getControl('Comment').value = u'Test comment from user'
+    >>> user.getControl('Post your comment').click()
+
+Url should poing to anchor
+
+    >>> user.url
+    'http://localhost/content/index.html#comments'
+
+    >>> print user.contents
+    <html>
+    ...
+    <h3>
+       <a title="Comments rss feed" href="http://localhost/content/@@feeds/comments">
+          <img src="http://localhost/@@/rss-icon.png" />
+       </a>
+       Comments (2)
+    </h3>
+    <div class="odd" style="margin-left: 0.00em"><div class="z-comment">
+      <a name="comment001"></a>
+      <table>
+        <tbody>
+          <tr>
+          <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+            at
+            ...
+        <a href="postcomment.html?replyto=001">Reply</a>
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from admin</div>       
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+     <div class="even" style="margin-left: 0.00em"><div class="z-comment">
+      <a name="comment002"></a>
+      <table>
+        <tbody>
+          <tr>
+          <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/user/">User</a>
+            at
+            ...
+        <a href="postcomment.html?replyto=002">Reply</a>
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from user</div>        
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    ...
+    </html>
+
+    >>> IPrincipalPermissionManager(getRootFolder()).denyPermissionToPrincipal(
+    ...     'zojax.PersonalSpace', 'zope.user')
+
+    >>> user.open('http://localhost/content/')
+    >>> print user.contents
+    <html>
+    ...
+    <h3>
+      <a title="Comments rss feed" href="http://localhost/content/@@feeds/comments">
+         <img src="http://localhost/@@/rss-icon.png" />
+      </a>
+      Comments (2)
+    </h3>
+    <div class="odd" style="margin-left: 0.00em"><div class="z-comment">
+      <a name="comment001"></a>
+      <table>
+        <tbody>
+          <tr>
+          <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+            at
+            ...
+        <a href="postcomment.html?replyto=001">Reply</a>
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from admin</div>       
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+     <div class="even" style="margin-left: 0.00em"><div class="z-comment">
+      <a name="comment002"></a>
+      <table>
+        <tbody>
+          <tr>
+          <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/user/">User</a>
+            at
+            ...
+        <a href="postcomment.html?replyto=002">Reply</a>
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from user</div>        
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    ...
+    </html>
+
+    >>> IPrincipalPermissionManager(getRootFolder()).grantPermissionToPrincipal(
+    ...     'zojax.PersonalSpace', 'zope.user')
+
+
+Activity support
+----------------
+
+    >>> from zojax.content.discussion.interfaces import ICommentActivityRecord
+    >>> from zojax.activity.interfaces import IActivity
+    >>> record = root.getSiteManager().getUtility(
+    ...     IActivity).objectRecords(root['content'])[0]
+
+    >>> ICommentActivityRecord.providedBy(record)
+    True
+
+    >>> record.comment
+    <zojax.content.discussion.comment.Comment ...>
+
+    >>> record.comment.comment
+    u'Test comment from user'
+
+
+Recent comments for content
+---------------------------
+
+    >>> user.open('http://localhost/content/@@feeds/comments')
+    >>> print user.contents
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+      <channel>
+        <title>Content comments</title>
+        <link>http://localhost/content/</link>
+        <description>Recent comments for this content item.</description>
+        <atom:link rel="self" type="application/rss+xml"
+                   href="http://localhost/content/@@feeds/comments"/>
+        <item>
+          <title>by Manager</title>
+          <description>Test comment from admin</description>
+          <guid isPermaLink="true">http://localhost/content/#comments001</guid>
+          <link>http://localhost/content/</link>
+          <author> (Manager)</author>
+          <pubDate>...</pubDate>
+        </item>
+        <item>
+          <title>by User</title>
+          <description>Test comment from user</description>
+          <guid isPermaLink="true">http://localhost/content/#comments002</guid>
+          <link>http://localhost/content/</link>
+          <author> (User)</author>
+          <pubDate>...</pubDate>
+        </item>
+      </channel>
+    </rss>
+
+
+Recent comments portlet
+-----------------------
+
+    >>> user.open('http://localhost/portlet')
+    >>> print user.contents
+    <html>
+    ...
+    ...<div class="z-portlet portlet-comments">
+      <h2 class="z-portlet-header">
+        <a class="z-portlet-feed" title="Recent comments rss feed" href="http://localhost/@@feeds/comments">
+          <img src="http://localhost/@@/rss-icon.png" />
+        </a>
+        Recent comments
+      </h2>
+      <div class="z-portlet-body">
+        <div class="z-portlet-item even">
+          <a class="portlet-comments-author" href="http://localhost/people/user/">User</a>
+          on
+          <a class="portlet-comments-place" href="http://localhost/content/#comment002"></a>
+          <div class="z-portlet-item-details">...</div>
+        </div>
+        <div class="z-portlet-item odd">
+          <a class="portlet-comments-author" href="http://localhost/people/manager/">Manager</a>
+          on
+          <a class="portlet-comments-place" href="http://localhost/content/#comment001"></a>
+          <div class="z-portlet-item-details">...</div>
+        </div>
+      </div>
+    </div>...
+    ...
+    </html>
+
+
+RSS Feed
+--------
+
+    >>> user.open('http://localhost/@@feeds/comments')
+    >>> print user.contents
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+      <channel>
+        <title>Recent comments</title>
+        <link>http://localhost/</link>
+        <description>Recently added comments.</description>
+        <atom:link rel="self" type="application/rss+xml"
+                   href="http://localhost/@@feeds/comments"/>
+        <item>
+          <title>by User on </title>
+          <description>Test comment from user</description>
+          <guid isPermaLink="true">http://localhost/content/#comments002</guid>
+          <link>http://localhost/content/</link>
+          <author> (User)</author>
+          <pubDate>...</pubDate>
+        </item>
+        <item>
+          <title>by Manager on </title>
+          <description>Test comment from admin</description>
+          <guid isPermaLink="true">http://localhost/content/#comments001</guid>
+          <link>http://localhost/content/</link>
+          <author> (Manager)</author>
+          <pubDate>...</pubDate>
+        </item>
+      </channel>
+    </rss>
+
+
+Manage comments
+---------------
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> admin.getLink('Content').click()
+    >>> print admin.contents
+    <html>
+    ...
+    <div class="z-listing-details">
+       <span>Open</span>
+          <a href=".../managediscussion.html">(Configure)</a>
+       <div>Comments are allowed.</div>
+    </div>
+    ...
+    </html>
+
+    >>> admin.getLink('(Configure)').click()
+    >>> print admin.contents
+    <html>
+    ...
+    <input type="checkbox" name="commentIds:list" value="001" />
+    ...
+    <a href="http://localhost/people/manager/">Manager</a>
+    ...
+    <input type="checkbox" name="commentIds:list" value="002" />
+    ...
+    <a href="http://localhost/people/user/">User</a>
+    ...
+    </html>
+
+    >>> admin.getControl('Remove').click()
+    >>> print admin.contents
+    <html>
+    ...Please select comments...
+    </html>
+
+    >>> admin.getControl(name="commentIds:list").value = ['002']
+    >>> admin.getControl('Remove').click()
+    >>> print admin.contents
+    <html>
+    ...Selected comments have been removed...
+    </html>
+
+    >>> admin.getControl('Back').click()
+
+    >>> user.open('http://localhost/content/')
+    >>> print user.contents
+    <html>
+    ...
+    <div class="z-content-discussion">
+       <a name="comments"></a>
+       <h3>
+          <a title="Comments rss feed" href="http://localhost/content/@@feeds/comments">
+             <img src="http://localhost/@@/rss-icon.png" />
+          </a>
+          Comments (1)
+       </h3>
+      <div class="odd" style="margin-left: 0.00em"><div class="z-comment">
+      <a name="comment001"></a>
+      <table>
+        <tbody>
+         <tr>
+          <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+            at
+            ...
+        <a href="postcomment.html?replyto=001">Reply</a>
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from admin</div>       
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    ...
+    </html>
+
+
+Threaded comments
+-----------------
+
+    >>> discussion = interfaces.IContentDiscussion(root['content'])
+
+    >>> comment01 = discussion['001']
+
+    >>> comment01.parent is None
+    True
+    >>> comment01.children is None
+    True
+
+    >>> user.open('http://localhost/content/')
+    >>> user.getLink('Reply').click()
+    >>> user.getControl('Cancel').click()
+
+    >>> user.getLink('Reply').click()
+    >>> user.getControl('Comment').value = u'Test comment from user'
+    >>> user.getControl('Reply to this comment').click()
+
+    >>> [c.__name__ for c in comment01.children]
+    [u'003']
+
+    >>> comment03 = discussion['003']
+
+    >>> comment03.parent.__name__
+    u'001'
+    >>> comment03.children is None
+    True
+
+    >>> user.open('http://localhost/content/postcomment.html?replyto=003')
+    >>> user.getControl('Comment').value = u'Comment4'
+    >>> user.getControl('Reply to this comment').click()
+
+    >>> [c.__name__ for c in comment03.children]
+    [u'004']
+
+    >>> comment04 = discussion['004']
+    >>> comment04.parent.__name__
+    u'003'
+
+    >>> del discussion['003']
+
+    >>> comment04.parent.__name__
+    u'001'
+    >>> [c.__name__ for c in comment01.children]
+    [u'004']
+
+    >>> del discussion['004']
+    >>> [c.__name__ for c in comment01.children]
+    []
+
+
+Close discussion
+----------------
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> admin.getLink('Content').click()
+    >>> admin.getControl(name="content.discussion.widgets.status:list").value = ['closed']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+    >>> admin.getLink('View').click()
+
+we can't post comment
+
+    >>> 'Leave a reply' in admin.contents
+    False
+
+but we can view posted comments
+
+    >>> print admin.contents
+    <html>
+    ...
+    <a name="comment001"></a>
+    <table>
+      <tbody>
+        <tr>
+          <td class="z-comment-avatar">
+            <img src="http://localhost/@@profile.avatar/0" />
+          </td>
+          <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+            at
+            ...
+          </span>
+        </div>
+        <div class="z-comment-text">Test comment from admin</div>       
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    ...
+    </html>
+
+
+Disabled discussion
+-------------------
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> admin.getLink('Content').click()
+    >>> admin.getControl(name="content.discussion.widgets.status:list").value = ['disabled']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+    >>> admin.getLink('View').click()
+
+we can't post comment
+
+    >>> 'Leave a reply' in admin.contents
+    False
+
+and we can't see posted comments
+
+    >>> 'Comments' in admin.contents
+    False
+
+
+Comments index helper
+---------------------
+
+We have catalog index for comments
+
+    >>> from zojax.content.discussion.extension import getCommentsText
+    >>> getCommentsText(root['content'])
+    u'Test comment from admin'
+
+    >>> getCommentsText(object())
+    u''
+
+
+Remove discussible content
+--------------------------
+
+If we remove discussible content all comments should be removed
+and unregistered in catalog and intids utilities.
+
+    >>> root = getRootFolder()
+    >>> content = root['content']
+    >>> discussion = interfaces.IContentDiscussion(content)
+
+    >>> comment = discussion['001']
+    >>> cid = root['ids'].getId(comment)
+
+    >>> del root['content']
+
+    >>> print root['ids'].queryObject(cid)
+    None

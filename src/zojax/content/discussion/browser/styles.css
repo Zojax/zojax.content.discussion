@@ -1,0 +1,62 @@
+/* zrt-cssregistry: */
+
+@media all {
+
+  .z-content-discussion {
+    padding-top: 2em;
+  }
+
+  .z-comment { 
+    padding: 1em;
+  }
+
+  .even .z-comment {
+    border-top: borderWidth dotted globalBorderColor;
+    border-bottom: borderWidth dotted globalBorderColor;
+  }
+
+  .z-comment table { 
+    width: 100%;
+  }
+
+  .z-comment a {
+    color: globalExtraColor;
+    text-decoration: none;
+  }
+
+  .z-comment a:hover {
+    color: linkColor;
+  }
+
+  .z-comment-avatar {
+    width: 1%;
+    padding-right: 1em;
+  }
+
+  .z-comment-avatar img {
+    padding: 2px;
+    border: 1px solid globalBorderColor;
+    width: 46px;
+    height: auto;
+  }
+
+  .z-comment-info { 
+    font-size: 90%;
+    color: discreetColor;
+    margin-bottom: 0.5em;
+    border-bottom: borderWidth dotted globalBorderColor;
+  }
+
+  .z-content-discussion #discussion { 
+    margin-top: 2em;
+  }
+
+  .z-content-discussion .z-form-label { 
+    font-weight: normal !important;
+  }
+
+  .z-content-discussion textarea { 
+    width: 100%;
+  }
+
+}

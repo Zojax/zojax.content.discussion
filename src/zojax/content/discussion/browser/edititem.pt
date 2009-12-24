@@ -1,0 +1,20 @@
+<tal:block tal:define="form python:view.contexts[0];
+		       item python:view.contexts[-1];
+		       widget python:view.contexts[-2];">
+  <div class="z-listing-icon">
+    <input type="radio"
+           tal:attributes="id item/id;
+                           name string:${widget/name}:list;
+                           title item/title;
+			   checked item/selected;
+			   value item/token;
+                           disabled widget/disabled;" />
+  </div>
+  <div class="z-listing-details">
+    <span tal:content="item/title"></span>
+    <tal:block condition="python:not form.drafted and item.selected">
+      <a tal:attributes="href string:${widget/form/@@absolute_url}/../managediscussion.html">(Configure)</a>
+    </tal:block>
+    <div tal:content="item/description"></div>
+  </div>
+</tal:block>
