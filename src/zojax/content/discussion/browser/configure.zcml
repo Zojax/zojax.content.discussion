@@ -60,18 +60,44 @@
           .edit.ContentDiscussonEdit * zojax.widget.radio.interfaces.ITermItem"
      template="edititem.pt" />
 
-  <zojax:pagelet
-     name="managediscussion.html"
-     for="zojax.content.forms.interfaces.IContentStep"
-     template="manage.pt"
-     class=".manage.ManageDiscussion"
-     permission="zojax.ModifyContent" />
-
   <!-- recent comments portlet view -->
   <zojax:pagelet
      type="portlet.view"
      template="recentcomments.pt"
      for="..interfaces.IRecentCommentsPortlet" />
+
+  <!-- managediscussion -->
+  <zojax:reservedNames
+     names="managediscussion"
+     for="zojax.content.discussion.interfaces.IContentDiscussionAware" />
+
+  <zojax:pagelet
+     name="managediscussion"
+     for="zojax.content.discussion.interfaces.IContentDiscussionAware"
+     class=".manage.ManageDiscussion"
+     permission="zojax.AddComment" />
+
+  <!-- delete -->
+  <zojax:pagelet
+     name="delete.html"
+     for="zojax.content.discussion.interfaces.IComment"
+     template="delete.pt"
+     class=".delete.DeleteContent"
+     permission="zojax.DeleteContent" />
+
+  <!-- edit content wizard -->
+  <zojax:pagelet
+     name="context.html"
+     for="zojax.content.discussion.interfaces.IComment"
+     class=".manage.EditContentWizard"
+     allowed_attributes="actions upperContainer"
+     permission="zojax.ModifyContent"
+  />
+
+  <zojax:pagelet
+     type="form.viewspaceInfo"
+     for=".manage.ManageDiscussion"
+     template="manage.pt" />
 
   <!-- notification email -->
   <zojax:mailtemplate

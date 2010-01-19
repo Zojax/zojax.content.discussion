@@ -20,7 +20,9 @@ from zope.i18nmessageid import MessageFactory
 from zope.component.interfaces import IObjectEvent, ObjectEvent
 from zojax.widget.radio.field import RadioChoice
 from zojax.content.feeds.interfaces import IRSS2Feed
-from zojax.content.discussion.vocabulary import commentPolicyVocabulary
+from zojax.content.discussion.vocabulary import commentPolicyVocabulary, \
+                                                postCommentPositionVocabulary, \
+                                                commentsOrderVocabulary
 from zojax.content.notifications.interfaces import IContentNotification
 
 _ = MessageFactory('zojax.content.discussion')
@@ -144,3 +146,25 @@ class ICommentActivityRecord(interface.Interface):
 
     comment = interface.Attribute('Comment object')
     commentId = interface.Attribute('Comment int id')
+
+
+class IContentDiscussionConfig(interface.Interface):
+    """ config """
+
+    postCommentPosition = RadioChoice(
+        title = _(u'Post comment form position'),
+        description = _('Select post comment form position'),
+        vocabulary = postCommentPositionVocabulary,
+        default = 1,
+        required = True)
+
+    commentsOrder = RadioChoice(
+        title = _(u'Comments order'),
+        description = _('Select order in which to dispay comments.'),
+        vocabulary = commentsOrderVocabulary,
+        default = 1,
+        required = True)
+
+
+class IContentDiscussionConfiglet(IContentDiscussionConfig):
+    """ configlet """

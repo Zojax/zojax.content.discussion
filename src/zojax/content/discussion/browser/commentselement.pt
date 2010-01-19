@@ -8,6 +8,14 @@
     </a>
     Comments (<tal:block tal:replace="view/length" >0</tal:block>)
   </h3>
-  <tal:block content="structure pagelet:+content.discussion" />
-  <tal:block content="structure pagelet:+content.discussion.reply" />
+
+  <tal:block condition="python: view.config.postCommentPosition == 1"
+             content="structure pagelet:+content.discussion" />
+  <tal:block condition="python: view.config.postCommentPosition == 1"
+             content="structure pagelet:+content.discussion.reply" />
+
+  <tal:block condition="python: view.config.postCommentPosition == 2"
+             content="structure pagelet:+content.discussion.reply" />
+  <tal:block condition="python: view.config.postCommentPosition == 2"
+             content="structure pagelet:+content.discussion" />
 </div>

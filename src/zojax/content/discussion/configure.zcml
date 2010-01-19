@@ -84,6 +84,24 @@
        permission="zope.View"
        interface="zojax.content.feeds.interfaces.IFeed" />
   </class>
+  
+  <!-- configlet -->
+  <zojax:configlet
+     name="content.discussion"
+     title="Content discussion"
+     description="This area allows you to configure and manage content discscussion."
+     class=".configlet.ContentDiscussionConfiglet"
+     schema=".interfaces.IContentDiscussionConfiglet"
+     permission="zojax.Configure" />
+     
+  <adapter factory=".configlet.getConfig" />
+  <subscriber handler=".configlet.configletModified" />
+  
+  <adapter factory=".comment.CommentOwnership" />
+  
+  <class class="zojax.content.discussion.comment.Comment">
+    <implements interface="zojax.ownership.interfaces.IOwnerAware" />
+  </class>
 
   <!-- catalog -->
   <include file="catalog.zcml" />

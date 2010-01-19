@@ -34,28 +34,61 @@ from zojax.content.discussion.interfaces import _, IContentDiscussion
 
 class ManageDiscussion(object):
 
-    def listComments(self):
-        context = self.discussion
-        for idx in context:
-            yield context[idx]
+    label = _(u'Manage discussion')
+    title = label
+    size = 30
 
     def update(self):
+        self.discussion = IContentDiscussion(self.context)
+        self.batch = Batch(self.discussion.values(), size=self.size, request=self.request)
+        super(ManageDiscussion, self).update()
+
+    @button.buttonAndHandler(_(u'Back'), name='content.discussion.back')
+    def handleBack(self, action):
+        self.redirect('.')
+
+    @button.buttonAndHandler(_(u'Remove'), name='content.discussion.remove')
+    def handleRemove(self, action):
         request = self.request
-        if 'content.discussion.back' in request:
-            self.redirect('.')
+        ids = request.get('commentIds', ())
+        if not ids:
+            IStatusMessage(request).add(_('Please select comments.'))
+
+        else:
+            for id in ids:
+                if id in self.discussion:
+                    del self.discussion[id]
+
+            IStatusMessage(request).add(
+                _('Selected comments have been removed.'))
+            self.redirect(self.request.getURL())
+
+    def canManage(self, comment):
+        return checkPermission('zojax.ModifyContent', self.context) or \
+        checkPermission('zojax.ModifyContent', comment)
+
+    def publishTraverse(self, request, name):
+        self.discussion = IContentDiscussion(self.context)
+        if name in self.discussion:
+            comment  = self.discussion[name]
+            if self.canManage(comment):
+                return LocationProxy(self.discussion[name], self, name)
+        raise NotFound(self.context, name, request)
+
+
+class EditContentWizard(wizardedit.EditContentWizard):
+    handlers = wizardedit.EditContentWizard.handlers.copy()
+
+    @button.handler(ISaveAction)
+    def handleApply(self, action):
+        wizardedit.EditContentWizard.handleApply(self, action)
+
+        if not self.step.isComplete():
             return
+        self.redirect("%s/" % absoluteURL(self.context.content, self.request))
 
-        self.discussion = IContentDiscussion(self.context.context)
+    def isLastStep(self):
+        return True
 
-        if 'content.discussion.remove' in request:
-            ids = request.get('commentIds', ())
-            if not ids:
-                IStatusMessage(request).add(_('Please select comments.'))
-
-            else:
-                for id in ids:
-                    if id in self.discussion:
-                        del self.discussion[id]
-
-                IStatusMessage(request).add(
-                    _('Selected comments have been removed.'))
+    def isFirstStep(self):
+        return True

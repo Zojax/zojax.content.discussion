@@ -26,7 +26,7 @@ from zojax.content.type.interfaces import IDraftedContent
 
 from zojax.content.discussion.cache import CommentsTag
 from zojax.content.discussion.interfaces import \
-    IContentDiscussion, IThreadedComment
+    IContentDiscussion, IThreadedComment, IContentDiscussionConfig
 
 
 def Modified(object, instance, *args, **kw):
@@ -39,7 +39,7 @@ class Comments(object):
 
     def __init__(self, context, request):
         self.discussion = IContentDiscussion(context)
-
+        self.config = IContentDiscussionConfig(context)
         super(Comments, self).__init__(context, request)
 
     def update(self):
@@ -48,14 +48,19 @@ class Comments(object):
         level = 0
         comments = []
 
+        if self.config.commentsOrder == 1:
+            values = lambda x: x
+        else:
+            values = lambda x: reversed(x)
+
         def process(root, level, comments):
             if IThreadedComment.providedBy(root):
-                for comment in root.children:
+                for comment in values(root.children):
                     comments.append((level, comment))
                     if comment.children:
                         process(comment, level+1, comments)
 
-        for comment in discussion.values():
+        for comment in values(discussion.values()):
             if IThreadedComment.providedBy(comment):
                 if comment.parent is None:
                     comments.append((level, comment))
@@ -77,6 +82,7 @@ class CommentsPageElement(object):
         discussion = IContentDiscussion(self.context)
         self.length = ISized(discussion).sizeForSorting()[1]
         self.hasComments = bool(len(discussion))
+        self.config = IContentDiscussionConfig(self.context)
 
     def isAvailable(self):
         return not IDraftedContent.providedBy(self.context)

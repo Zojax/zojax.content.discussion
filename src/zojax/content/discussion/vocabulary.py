@@ -32,3 +32,11 @@ commentPolicyVocabulary.getTerm(2).description = _(
     'Existing comments will be displayed, new comments are not allowed.')
 commentPolicyVocabulary.getTerm(3).description = _(
     'Comments will not be displayed, new comments are not allowed.')
+
+postCommentPositionVocabulary = SimpleVocabulary(
+    [SimpleTerm(1, 'under', _('Under comments')),
+     SimpleTerm(2, 'above', _('Above comments'))])
+
+commentsOrderVocabulary = SimpleVocabulary(
+    [SimpleTerm(1, 'direct', _('Direct order')),
+     SimpleTerm(2, 'reversed', _('Reverse order'))])
