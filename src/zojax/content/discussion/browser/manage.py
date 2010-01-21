@@ -32,7 +32,7 @@ from zojax.statusmessage.interfaces import IStatusMessage
 from zojax.content.discussion.interfaces import _, IContentDiscussion
 
 
-class ManageDiscussion(object):
+class ManageDiscussion(PageletForm):
 
     label = _(u'Manage discussion')
     title = label

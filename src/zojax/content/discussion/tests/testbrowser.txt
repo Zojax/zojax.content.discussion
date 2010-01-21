@@ -103,7 +103,7 @@ Add comment
         <a href="postcomment.html?replyto=001">Reply</a>
           </span>
         </div>
-        <div class="z-comment-text">Test comment from admin</div>       
+        <div class="z-comment-text">Test comment from admin</div>
           </td>
           </tr>
         </tbody>
@@ -149,7 +149,7 @@ Url should poing to anchor
         <a href="postcomment.html?replyto=001">Reply</a>
           </span>
         </div>
-        <div class="z-comment-text">Test comment from admin</div>       
+        <div class="z-comment-text">Test comment from admin</div>
           </td>
           </tr>
         </tbody>
@@ -173,7 +173,7 @@ Url should poing to anchor
         <a href="postcomment.html?replyto=002">Reply</a>
           </span>
         </div>
-        <div class="z-comment-text">Test comment from user</div>        
+        <div class="z-comment-text">Test comment from user</div>
           </td>
           </tr>
         </tbody>
@@ -213,7 +213,7 @@ Url should poing to anchor
         <a href="postcomment.html?replyto=001">Reply</a>
           </span>
         </div>
-        <div class="z-comment-text">Test comment from admin</div>       
+        <div class="z-comment-text">Test comment from admin</div>
           </td>
           </tr>
         </tbody>
@@ -237,7 +237,7 @@ Url should poing to anchor
         <a href="postcomment.html?replyto=002">Reply</a>
           </span>
         </div>
-        <div class="z-comment-text">Test comment from user</div>        
+        <div class="z-comment-text">Test comment from user</div>
           </td>
           </tr>
         </tbody>
@@ -377,7 +377,7 @@ Manage comments
     ...
     <div class="z-listing-details">
        <span>Open</span>
-          <a href=".../managediscussion.html">(Configure)</a>
+          <a href=".../managediscussion">(Configure)</a>
        <div>Comments are allowed.</div>
     </div>
     ...
@@ -442,7 +442,7 @@ Manage comments
         <a href="postcomment.html?replyto=001">Reply</a>
           </span>
         </div>
-        <div class="z-comment-text">Test comment from admin</div>       
+        <div class="z-comment-text">Test comment from admin</div>
           </td>
           </tr>
         </tbody>
@@ -540,7 +540,7 @@ but we can view posted comments
             ...
           </span>
         </div>
-        <div class="z-comment-text">Test comment from admin</div>       
+        <div class="z-comment-text">Test comment from admin</div>
           </td>
         </tr>
       </tbody>
