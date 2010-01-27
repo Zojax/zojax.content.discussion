@@ -35,9 +35,11 @@ from zojax.content.discussion.comment import Comment
 from zojax.content.discussion.interfaces import _, IComment, IContentDiscussion
 
 
-def PostComment(object, instance, *args, **kw):
+def PostCommentKey(object, instance, *args, **kw):
+    instance.updateForms()
     if not instance.postsAllowed or \
-            instance.request.has_key('discussion.buttons.post'):
+            instance.request.has_key('discussion.buttons.post') or \
+            (len(instance.forms) or len(instance.subforms)):
         raise DoNotCache()
     return ()
 
@@ -78,7 +80,7 @@ class PostCommentForm(PageletForm):
     def isAvailable(self):
         return self.postsAllowed
 
-    @cache('content.discussion.reply', PostComment, PrincipalAndContext)
+    @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
     def updateAndRender(self):
         return super(PostCommentForm, self).updateAndRender()
 
