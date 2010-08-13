@@ -18,15 +18,20 @@ $Id$
 from email.Utils import formataddr
 
 from zope import interface, component
-from zope.component import getUtility, queryMultiAdapter
+from zope.component import getUtility, queryMultiAdapter, getAdapter
 from zope.traversing.browser import absoluteURL
 from zope.app.intid.interfaces import IIntIds
 
+from zojax.mail.interfaces import IMailer
 from zojax.content.type.interfaces import IContentViewView
 from zojax.principal.profile.interfaces import IPersonalProfile
 
+from zojax.content.discussion.interfaces import ICommentsNotification
+
 
 class CommentNotificationMail(object):
+
+    profile_url = None
 
     def update(self):
         super(CommentNotificationMail, self).update()
@@ -36,14 +41,20 @@ class CommentNotificationMail(object):
         self.comment = comment
 
         request = self.request
+
         principal = self.request.principal
+
+        mailer = getUtility(IMailer)
 
         profile = IPersonalProfile(principal, None)
         if profile is not None and profile.email:
             author = profile.title
             self.author = author
+            space = getattr(profile, 'space', None)
+            if space is not None:
+                self.profile_url = absoluteURL(space, request)
             self.addHeader(u'To', formataddr((author, profile.email),))
-            self.addHeader(u'From', formataddr((author, profile.email),))
+            self.addHeader(u'From', formataddr((author, mailer.email_from_address),))
         else:
             self.author = principal.title or principal.id
 
@@ -54,6 +65,7 @@ class CommentNotificationMail(object):
             self.url = '%s/'%absoluteURL(content, request)
 
         self.content = comment.content
+        self.subscription_id = getAdapter(comment.content, ICommentsNotification, 'comments').getSubscription(principal.id).id
 
     @property
     def subject(self):

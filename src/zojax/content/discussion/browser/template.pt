@@ -1,9 +1,15 @@
-<h4><tal:block content="view/author"/> replied to 
+<h4><tal:block content="view/author"/> replied to
   <a tal:attributes="href view/url"
      tal:content="view/content/title|view/content/__name__"></a></h4>
 <br />
 Comment:
-<div tal:content="structure view/context0"></div>
+<div tal:content="structure view/comment/comment"></div>
 <br />
 <hr />
 <a tal:attributes="href string:${view/url}#comments">View comments</a>
+<br />
+<div>
+Click <a tal:condition="view/profile_url"
+         tal:attributes="href string:${view/profile_url}/profile/notifications/?ids:list=${view/subscription_id}&button.unsubscribe=">here</a> if you would like to stop receiving updates on <a tal:attributes="href view/url"
+ tal:content="view/content/title|view/content/__name__"></a>
+</div>

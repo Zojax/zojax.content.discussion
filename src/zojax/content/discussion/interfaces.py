@@ -115,7 +115,7 @@ class CommentRemovedEvent(CommentEvent):
     interface.implements(ICommentRemovedEvent)
 
 
-class IContentDiscussionAware(interface.Interface):
+class IContentDiscussionAware(ICommentsNotificationsAware):
     """Content discussion aware"""
 
 
