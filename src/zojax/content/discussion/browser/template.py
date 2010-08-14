@@ -65,7 +65,6 @@ class CommentNotificationMail(object):
             self.url = '%s/'%absoluteURL(content, request)
 
         self.content = comment.content
-        self.subscription_id = getAdapter(comment.content, ICommentsNotification, 'comments').getSubscription(principal.id).id
 
     @property
     def subject(self):
