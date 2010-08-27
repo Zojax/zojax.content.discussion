@@ -32,6 +32,8 @@ from zojax.extensions.container import ContentContainerExtension
 from interfaces import CommentAddedEvent, CommentRemovedEvent
 from interfaces import IComment, IDiscussible, IOpenDiscussible
 from interfaces import IContentDiscussion, IContentDiscussionAware
+from notifications import discussibleAdded
+
 
 CommentsTag = ContextTag('zojax.discussion')
 
@@ -53,6 +55,7 @@ class ContentDiscussionExtension(ContentContainerExtension):
         else:
             if not IContentDiscussionAware.providedBy(context):
                 interface.alsoProvides(context, IContentDiscussionAware)
+                discussibleAdded(context, None)
 
         self.data.status = value
 
@@ -84,19 +87,6 @@ class ContentDiscussionExtension(ContentContainerExtension):
     @setproperty
     def modified(self, value):
         self.data.modified = value
-
-    @setproperty
-    def status(self, value):
-        context = removeAllProxies(self.context)
-
-        if value == 3:
-            if IContentDiscussionAware.providedBy(context):
-                interface.noLongerProvides(context, IContentDiscussionAware)
-        else:
-            if not IContentDiscussionAware.providedBy(context):
-                interface.alsoProvides(context, IContentDiscussionAware)
-
-        self.data.status = value
 
     def add(self, comment):
         lastid = self.lastid
