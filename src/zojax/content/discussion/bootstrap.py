@@ -19,6 +19,7 @@ import logging
 
 import transaction
 from zope import event, component, interface
+from zope.component.interfaces import ComponentLookupError
 from zope.lifecycleevent import ObjectCreatedEvent
 from zope.traversing.interfaces import IContainmentRoot
 from zope.app.component.hooks import getSite, setSite
@@ -59,11 +60,14 @@ def bootstrapSubscriber(ev):
                     catalog = getCatalog()
                 except LookupError:
                     continue
-                if len(list(catalog)) != len(list(catalog.getIndexes())):
-                    logger.info('Updating Discussion Catalog Indexes...')
-                    catalog.clear()
-                    catalog.updateIndexes()
-                    logger.info('Done!')
+                try:
+                    if len(list(catalog)) != len(list(catalog.getIndexes())):
+                        logger.info('Updating Discussion Catalog Indexes...')
+                        catalog.clear()
+                        catalog.updateIndexes()
+                        logger.info('Done!')
+                except ComponentLookupError:
+                    continue
             finally:
                 setSite(None)
     finally:
