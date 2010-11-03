@@ -102,6 +102,10 @@
   <class class="zojax.content.discussion.comment.Comment">
     <implements interface="zojax.ownership.interfaces.IOwnerAware" />
   </class>
+  
+  <utility
+     name="zojax.content.discussion.portlet-portaltypes"
+     factory=".vocabulary.PortletTypesVocabulary" />
 
   <!-- catalog -->
   <include file="catalog.zcml" />
@@ -114,6 +118,9 @@
 
   <!-- top contributors -->
   <include file="topcontributors.zcml" />
+  
+  <!-- bootstrap -->
+  <include file="bootstrap.zcml" />
 
   <!-- browser view -->
   <include package=".browser" />

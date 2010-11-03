@@ -6,7 +6,9 @@
        tal:attributes="href string:${context/@@absolute_url}/@@feeds/comments">
       <img tal:attributes="src context/++resource++rss-icon.png" />
     </a>
-    <tal:block tal:content="context/title">Recent comments</tal:block>
+    <tal:block tal:condition="not: context/label">Recent comments</tal:block>
+    <tal:block tal:content="context/label"
+      tal:condition="context/label">Recent comments</tal:block>
   </h2>
 
   <div class="z-portlet-body">

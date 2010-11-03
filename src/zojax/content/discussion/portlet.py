@@ -53,7 +53,12 @@ class RecentCommentsPortlet(object):
         if context is None:
             return
 
-        self.comments = getCatalog().search(contexts=(context,))[:self.number]
+        catalog = getCatalog()
+
+        if '__all__' in self.types:
+            self.comments = catalog.search(contexts=(context,))[:self.number]
+        else:
+            self.comments = catalog.search(contexts=(context,), types=self.types)[:self.number]
 
         super(RecentCommentsPortlet, self).update()
 

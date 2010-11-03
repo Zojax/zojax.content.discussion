@@ -125,11 +125,23 @@ class ICommentsCatalog(interface.Interface):
 
 class IRecentCommentsPortlet(interface.Interface):
     """ recent comments portlet """
+    
+    label = schema.TextLine(
+        title = _(u'Label'),
+        required = False)
 
     number = schema.Int(
         title = _(u'Number of comments'),
         description = _(u'Number of comments to display'),
         default = 10,
+        required = True)
+    
+    types = schema.List(
+        title = _(u'Portal types'),
+        description = _('Portal types to list in portlet.'),
+        value_type = schema.Choice(
+            vocabulary='zojax.content.discussion.portlet-portaltypes'),
+        default = ['__all__'],
         required = True)
 
 

@@ -14,5 +14,31 @@
   <subscriber handler=".catalog.commentAdded" />
   <subscriber handler=".catalog.commentRemoved" />
   <subscriber handler=".catalog.handleCatalogAdded" />
+  
+   <adapter
+     name="author"
+     factory=".catalog.AuthorIndex" />
+     
+    <adapter
+     name="access"
+     factory=".catalog.AccessIndex" />
+    
+    <adapter
+     name="date"
+     factory=".catalog.DateIndex" />
+    
+    <adapter
+     name="content"
+     factory=".catalog.ContentIndex" />
+    
+    <adapter
+     name="contexts"
+     factory=".catalog.ContextsIndex" />
+
+   <adapter
+     name="type"
+     factory=".catalog.TypeIndex" />
+     
+   
 
 </configure>

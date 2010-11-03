@@ -15,8 +15,14 @@
 
 $Id$
 """
+from zope.component import getUtilitiesFor
+from zope import interface
+from zope.schema.interfaces import IVocabularyFactory
 from zope.i18nmessageid import MessageFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+
+from zojax.content.type.interfaces import IPortalType
+
 
 _ = MessageFactory('zojax.content.discussion')
 
@@ -40,3 +46,19 @@ postCommentPositionVocabulary = SimpleVocabulary(
 commentsOrderVocabulary = SimpleVocabulary(
     [SimpleTerm(1, 'direct', _('Direct order')),
      SimpleTerm(2, 'reversed', _('Reverse order'))])
+
+
+class PortletTypesVocabulary(object):
+    interface.implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        pt = []
+
+        for name, ct in getUtilitiesFor(IPortalType, context=context):
+            pt.append((ct.title, name))
+
+        pt.sort()
+
+        return SimpleVocabulary(
+            [SimpleTerm('__all__', '__all__', _('All portal types'))] +
+            [SimpleTerm(name, name, title) for title, name in pt])
