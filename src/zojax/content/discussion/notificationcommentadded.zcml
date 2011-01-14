@@ -1,0 +1,7 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   i18n_domain="zojax.content.discussion">
+
+  <subscriber handler=".notifications.commentAdded" />
+
+</configure>

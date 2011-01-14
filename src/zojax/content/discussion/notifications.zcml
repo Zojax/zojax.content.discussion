@@ -18,11 +18,12 @@
        interface=".interfaces.ICommentsNotification" />
   </class>
 
-  <subscriber handler=".notifications.commentAdded" />
   <subscriber handler=".notifications.discussibleAdded" />
 
   <utility
      name="comments"
      factory=".notifications.CommentsNotificationDescription" />
+
+  <include file="notificationcommentadded.zcml" />
 
 </configure>
