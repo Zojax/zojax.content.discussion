@@ -48,13 +48,6 @@ class CommentsNotificationDescription(object):
 @component.adapter(ISimpleComment, IIntIdAddedEvent)
 def commentAdded(comment, ev):
     if ICommentsNotificationsAware.providedBy(comment.content):
-        #check subscribe
-        notification = getAdapter(comment.content, ICommentsNotification, 'comments')
-        try:
-            if not notification.isSubscribedInParents():
-                notification.subscribe()
-        except SubscriptionException:
-            pass
         # send notification
         sendNotification('comments', comment.content, comment)
 
