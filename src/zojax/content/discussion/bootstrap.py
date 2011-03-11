@@ -11,6 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+from zope.traversing.api import getParent, getParents
 """
 
 $Id$
