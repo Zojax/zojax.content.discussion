@@ -52,7 +52,7 @@ class CommentNotificationMail(object):
             self.author = author
             space = getattr(profile, 'space', None)
             if space is not None:
-                self.profile_url = absoluteURL(space, request)
+                self.profile_url = '%s/profile' % absoluteURL(space, request)
             self.addHeader(u'To', formataddr((author, profile.email),))
             self.addHeader(u'From', formataddr((author, mailer.email_from_address),))
         else:
