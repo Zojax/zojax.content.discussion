@@ -2,11 +2,12 @@
 
   <h2 class="z-portlet-header">
     <a class="z-portlet-feed" title="Recent comments rss feed"
+       i18n:attributes="title"
        tal:define="context nocall:view/context/context"
        tal:attributes="href string:${context/@@absolute_url}/@@feeds/comments">
       <img tal:attributes="src context/++resource++rss-icon.png" />
     </a>
-    <tal:block tal:condition="not: context/label">Recent comments</tal:block>
+    <tal:block tal:condition="not: context/label" i18n:translate="">Recent comments</tal:block>
     <tal:block tal:content="context/label"
       tal:condition="context/label">Recent comments</tal:block>
   </h2>
@@ -17,12 +18,14 @@
       <a class="portlet-comments-author" tal:condition="comment/author"
          tal:attributes="href comment/profile" tal:omit-tag="not:comment/profile"
          tal:content="comment/author"></a>
-      <span class="portlet-comments-author" tal:condition="not:comment/author">Unknown</span>
+      <span class="portlet-comments-author" tal:condition="not:comment/author" i18n:translate="">Unknown</span>
+      <tal:block i18n:translate="">
       on
+      </tal:block>
       <a class="portlet-comments-place" tal:content="comment/title"
 	 tal:attributes="href string:${comment/url}/#comment${comment/name}"></a>
       <div class="z-portlet-item-details"
-	   tal:content="structure comment/fomratteddate">Date</div>
+	   tal:content="structure comment/fomratteddate" i18n:translate="">Date</div>
     </div>
   </div>
 </div>

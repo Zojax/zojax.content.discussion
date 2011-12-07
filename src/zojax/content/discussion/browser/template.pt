@@ -1,14 +1,17 @@
-<h4><tal:block content="view/author"/> replied to
-  <a tal:attributes="href view/url"
+<h4 i18n:attributes="value"><tal:block i18n:name="author" content="view/author"/> replied to
+  <a i18n:name="url" tal:attributes="href view/url"
      tal:content="view/content/title|view/content/__name__"></a></h4>
 <br />
+<tal:block i18n:translate="">
 Comment:
+</tal:block>
 <div tal:content="structure view/comment/comment"></div>
 <br />
 <hr />
-<a tal:attributes="href string:${view/url}#comments">View comments</a>
+<a tal:attributes="href string:${view/url}#comments" i18n:translate="">View comments</a>
 <br />
-<div>
+<div i18n:translate="">
 Use your profile settings if you would like to stop receiving updates on <a tal:attributes="href view/url"
+ i18n:name="title"
  tal:content="view/content/title|view/content/__name__"></a>
 </div>

@@ -8,17 +8,20 @@
   </td>
   <td class="z-comment-body">
     <div class="z-comment-info">
-      <span>
+      <span i18n:translate="">
         Posted by
         <a tal:attributes="href string:${view/url}/"
      tal:omit-tag="not:view/url"
+     i18n:name="author"
      tal:content="view/author|string:Anonymous"></a>
         at
-        <tal:block content="structure
+        <tal:block i18n:name="date" content="structure
           formatter:fancyDatetime,full:context/date"
        />
+       <tal:block i18n:name="reply_link">
         <a tal:attributes="href string:postcomment.html?replyto=${context/__name__}"
      tal:condition="view/postsAllowed">Reply</a>
+       <tal:block>
       </span>
     </div>
     <div class="z-comment-text" tal:content="structure view/comment"></div>

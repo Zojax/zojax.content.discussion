@@ -11,7 +11,7 @@
        tal:attributes="value comment/__name__" />
     </td>
     <td>&nbsp;</td>
-    <td width="1%"><a tal:attributes="href string:${context/@@absolute_url}/${comment/__name__}/context.html">Edit</a></td>
+    <td width="1%"><a tal:attributes="href string:${context/@@absolute_url}/${comment/__name__}/context.html" i18n:translate="">Edit</a></td>
   </tal:block>
   <td tal:attributes="class python:
           repeat['comment'].odd() and 'odd' or 'even'"
@@ -20,7 +20,7 @@
     </tbody>
   </table>
 
-  <tal:block tal:condition="not:context/batch">
+  <tal:block tal:condition="not:context/batch" i18n:translate="">
     There are no comments for this content.
   </tal:block>
 </tal:block>

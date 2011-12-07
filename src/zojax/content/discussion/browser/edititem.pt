@@ -13,7 +13,7 @@
   <div class="z-listing-details">
     <span tal:content="item/title"></span>
     <tal:block condition="python:not form.drafted and item.selected">
-      <a tal:attributes="href string:${widget/form/@@absolute_url}/../../../managediscussion">(Configure)</a>
+      <a tal:attributes="href string:${widget/form/@@absolute_url}/../../../managediscussion" i18n:translate="">(Configure)</a>
     </tal:block>
     <div tal:content="item/description"></div>
   </div>
