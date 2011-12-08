@@ -1,4 +1,4 @@
-<h4 i18n:attributes="value"><tal:block i18n:name="author" content="view/author"/> replied to
+<h4 i18n:translate=""><tal:block i18n:name="author" content="view/author"/> replied to
   <a i18n:name="url" tal:attributes="href view/url"
      tal:content="view/content/title|view/content/__name__"></a></h4>
 <br />

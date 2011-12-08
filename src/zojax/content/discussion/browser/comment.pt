@@ -20,8 +20,8 @@
        />
        <tal:block i18n:name="reply_link">
         <a tal:attributes="href string:postcomment.html?replyto=${context/__name__}"
-     tal:condition="view/postsAllowed">Reply</a>
-       <tal:block>
+     tal:condition="view/postsAllowed" i18n:translate="">Reply</a>
+       </tal:block>
       </span>
     </div>
     <div class="z-comment-text" tal:content="structure view/comment"></div>
