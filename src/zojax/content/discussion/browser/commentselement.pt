@@ -7,7 +7,7 @@
        tal:attributes="href string:${context/@@absolute_url}/@@feeds/comments">
       <img tal:attributes="src context/++resource++rss-icon.png" />
     </a>
-    <tal:block i18n:translate="">Comments (<tal:block tal:replace="view/length" >0</tal:block>)</tal:block>
+    <tal:block i18n:translate="">Comments (<tal:block tal:replace="view/length" i18n:name="length" >0</tal:block>)</tal:block>
   </h3>
 
   <tal:block condition="python: view.config.postCommentPosition == 1"

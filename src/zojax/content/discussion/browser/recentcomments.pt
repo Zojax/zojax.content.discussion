@@ -25,7 +25,7 @@
       <a class="portlet-comments-place" tal:content="comment/title"
 	 tal:attributes="href string:${comment/url}/#comment${comment/name}"></a>
       <div class="z-portlet-item-details"
-	   tal:content="structure comment/fomratteddate" i18n:translate="">Date</div>
+	   tal:content="structure comment/fomratteddate">Date</div>
     </div>
   </div>
 </div>
