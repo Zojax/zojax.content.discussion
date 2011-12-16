@@ -1,0 +1,291 @@
+##############################################################################
+#
+# Copyright (c) 2003-2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Sun Dec 11 10:45:09 2011\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#: src/zojax/content/discussion/activity.py:36
+msgid "replied to"
+msgstr ""
+
+#: src/zojax/content/discussion/activity.py:46
+#: src/zojax/content/discussion/interfaces.py:53
+#: src/zojax/content/discussion/configure.zcml:42
+msgid "Comment"
+msgstr ""
+
+#: src/zojax/content/discussion/activity.py:47
+msgid "Comment added to content object."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/comment.pt:21
+msgid "Posted by ${author} at ${date} ${reply_link}"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/comment.pt:22
+msgid "Reply"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/commentselement.pt:10
+msgid "Comments (${length})"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/commentselement.pt:4
+msgid "Comments rss feed"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/delete.pt:12
+msgid "Delete"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/delete.pt:2
+msgid "Are you sure you want remove this comment?"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/delete.py:35
+msgid "Comment has been deleted."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/edititem.pt:16
+msgid "(Configure)"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.pt:14
+msgid "Edit"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.pt:23
+msgid "There are no comments for this content."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.py:37
+msgid "Manage discussion"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.py:46
+msgid "Back"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.py:50
+msgid "Remove"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.py:55
+msgid "Please select comments."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/manage.py:63
+msgid "Selected comments have been removed."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:110
+msgid "Reply to this comment"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:130
+#: src/zojax/content/discussion/browser/delete.pt:9
+msgid "Cancel"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:51
+msgid "Discuss"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:61
+msgid "Post your comment"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:66
+#: src/zojax/content/discussion/browser/post.py:115
+msgid "Please fix indicated errors."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:77
+#: src/zojax/content/discussion/browser/post.py:127
+msgid "Comment has been added."
+msgstr ""
+
+#: src/zojax/content/discussion/browser/post.py:92
+msgid "Reply to"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/recentcomments.pt:21
+msgid "Unknown"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/recentcomments.pt:22
+msgid "on"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/recentcomments.pt:4
+msgid "Recent comments rss feed"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/template.pt:11
+msgid "View comments"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/template.pt:14
+msgid "Use your profile settings if you would like to stop receiving updates on ${title}"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/template.pt:2
+msgid "${author} replied to ${url}"
+msgstr ""
+
+#: src/zojax/content/discussion/browser/template.pt:5
+msgid "Comment:"
+msgstr ""
+
+#: src/zojax/content/discussion/configure.zcml:42
+msgid "Discussion comment."
+msgstr ""
+
+#: src/zojax/content/discussion/configure.zcml:89
+msgid "This area allows you to configure and manage content discscussion."
+msgstr ""
+
+#: src/zojax/content/discussion/configure.zcml:9
+msgid "Discussion"
+msgstr ""
+
+#: src/zojax/content/discussion/configure.zcml:9
+msgid "Simple content discussions."
+msgstr ""
+
+#: src/zojax/content/discussion/feeds.py:102
+#. Default: ""
+msgid "by ${author}"
+msgstr ""
+
+#: src/zojax/content/discussion/feeds.py:37
+#: src/zojax/content/discussion/notifications.py:36
+#: src/zojax/content/discussion/notifications.py:44
+#: src/zojax/content/discussion/configure.zcml:61
+#: src/zojax/content/discussion/browser/recentcomments.pt:10
+msgid "Recent comments"
+msgstr ""
+
+#: src/zojax/content/discussion/feeds.py:38
+#: src/zojax/content/discussion/notifications.py:37
+#: src/zojax/content/discussion/notifications.py:45
+msgid "Recently added comments."
+msgstr ""
+
+#: src/zojax/content/discussion/feeds.py:64
+#. Default: ""
+msgid "by ${author} on ${content}"
+msgstr ""
+
+#: src/zojax/content/discussion/feeds.py:74
+msgid "Content comments"
+msgstr ""
+
+#: src/zojax/content/discussion/feeds.py:75
+msgid "Recent comments for this content item."
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:130
+msgid "Label"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:134
+msgid "Number of comments"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:135
+msgid "Number of comments to display"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:140
+msgid "Portal types"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:141
+msgid "Portal types to list in portlet."
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:167
+msgid "Post comment form position"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:168
+msgid "Select post comment form position"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:174
+msgid "Comments order"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:175
+msgid "Select order in which to dispay comments."
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:75
+#: src/zojax/content/discussion/configure.zcml:89
+msgid "Content discussion"
+msgstr ""
+
+#: src/zojax/content/discussion/interfaces.py:76
+msgid "Select comment policy for this item."
+msgstr ""
+
+#: src/zojax/content/discussion/permissions.zcml:7
+msgid "Add content comments"
+msgstr ""
+
+#: src/zojax/content/discussion/permissions.zcml:7
+msgid "Allow add comments in content discussion."
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:35
+msgid "Comments are allowed."
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:37
+msgid "Existing comments will be displayed, new comments are not allowed."
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:39
+msgid "Comments will not be displayed, new comments are not allowed."
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:43
+msgid "Under comments"
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:44
+msgid "Above comments"
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:47
+msgid "Direct order"
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:48
+msgid "Reverse order"
+msgstr ""
+
+#: src/zojax/content/discussion/vocabulary.py:63
+msgid "All portal types"
+msgstr ""
+
