@@ -1,0 +1,43 @@
+##############################################################################
+#
+# Copyright (c) 2003-2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Sun Dec 11 10:45:09 2011\n"
+"PO-Revision-Date: 2012-04-15 14:34-0500\n"
+"Last-Translator: Mariné Pérez <marine.perez@gmail.com>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#. Default: ""
+#: src/zojax/content/discussion/feeds.py:102
+msgid "by ${author}"
+msgstr "por ${author}"
+
+#. Default: ""
+#: src/zojax/content/discussion/feeds.py:64
+msgid "by ${author} on ${content}"
+msgstr "por ${author} el ${content}"
+
+#: src/zojax/content/discussion/feeds.py:74
+msgid "Content comments"
+msgstr "Comentarios sobre el contenido"
+
+#: src/zojax/content/discussion/feeds.py:75
+msgid "Recent comments for this content item."
+msgstr "Comentarios recientes sobre este ítem de contenido."
+
