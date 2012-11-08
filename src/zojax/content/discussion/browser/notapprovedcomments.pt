@@ -1,0 +1,53 @@
+<div class="z-topframe" tal:define="comments view/results">
+
+    <h2 tal:content="view/title"></h2>
+    <div class="z-page-description" tal:content="view/label"></div>
+
+  <tal:block tal:condition="comments">
+    <table class="z-table not-approved-configlet">
+      <thead>
+        <tr>
+          <th><!--input type="checkbox" name="form.checkbox.all_ids" /--></th>
+          <th>Comment</th>
+          <th>Author</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tal:block tal:repeat="comment comments">
+        <tr tal:define="info python: view.getInfo(comment)"
+            tal:attributes="class python:repeat['comment'].odd() and 'even' or 'odd'">
+          <td>
+            <input type="checkbox" name="form.checkbox.id:list"
+                   tal:attributes="value info/oid" />
+          </td>
+          <td><a tal:content="python: comment.comment[:50]"
+                 tal:attributes="href comment/url"
+                 tal:omit-tag="not: comment/url">Comment</a>
+          </td>
+          <td>
+            <a tal:attributes="href string:${info/author_url}/"
+               tal:omit-tag="not:info/author_url"
+               tal:content="info/author|string:Anonymous">URL</a>
+          </td>
+          <td>
+            <span tal:replace="structure formatter:fancyDatetime,short:comment/date" />
+          </td>
+        </tr>
+      </tal:block>
+      </tbody>
+    </table>
+    <div class="z-form-controls">
+      <hr />
+      <input type="submit" class="z-form-standalonebtn" i18n:attributes="value"
+             name="form.button.remove" value="Remove" />
+      <input type="submit" class="z-form-standalonebtn" i18n:attributes="value"
+             name="form.button.approve" value="Approve" />
+    </div>
+  </tal:block>
+
+    <div tal:condition="not:comments">
+        All comments approved.
+    </div>
+
+</div>

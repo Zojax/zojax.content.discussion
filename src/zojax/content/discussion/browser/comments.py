@@ -56,18 +56,21 @@ class Comments(object):
         def process(root, level, comments):
             if IThreadedComment.providedBy(root):
                 for comment in values(root.children):
-                    comments.append((level, comment))
-                    if comment.children:
-                        process(comment, level+1, comments)
+                    if comment.isAvailable():
+                        comments.append((level, comment))
+                        if comment.children:
+                            process(comment, level+1, comments)
 
         for comment in values(discussion.values()):
             if IThreadedComment.providedBy(comment):
                 if comment.parent is None:
-                    comments.append((level, comment))
-                    if comment.children:
-                        process(comment, level+1, comments)
+                    if comment.isAvailable():
+                        comments.append((level, comment))
+                        if comment.children:
+                            process(comment, level+1, comments)
             else:
-                comments.append((level, comment))
+                if comment.isAvailable():
+                    comments.append((level, comment))
 
         self.comments = comments
 

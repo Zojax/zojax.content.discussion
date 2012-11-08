@@ -20,12 +20,16 @@ from zope import interface, component
 from persistent import Persistent
 from zope.location import Location
 from zope.proxy import removeAllProxies
+from zope.security import checkPermission
+from zope.traversing.browser import absoluteURL
 from zope.app.container.interfaces import IObjectRemovedEvent
 
+from zojax.catalog.utils import getRequest
 from zojax.ownership.interfaces import IOwnership
 from zojax.security.utils import getPrincipal
 
-from interfaces import ISimpleComment, IThreadedComment
+from interfaces import ISimpleComment, IThreadedComment, IContentDiscussion
+from zope.schema.fieldproperty import FieldProperty
 
 
 class Comment(Persistent, Location):
@@ -37,6 +41,9 @@ class Comment(Persistent, Location):
     parent = None
     children = None
 
+    authorName = FieldProperty(ISimpleComment['authorName'])
+    approved = FieldProperty(ISimpleComment['approved'])
+
     def __init__(self, author, comment):
         self.comment = comment
         self.author = author
@@ -44,6 +51,15 @@ class Comment(Persistent, Location):
     @property
     def content(self):
         return self.__parent__.__parent__
+
+    @property
+    def id(self):
+        return self.__name__
+
+    @property
+    def url(self):
+        url="%s/@@managediscussion/%s/context.html"
+        return url % (absoluteURL(self.content, getRequest()), self.id)
 
     def addChild(self, comment):
         children = self.children
@@ -80,6 +96,17 @@ class Comment(Persistent, Location):
         if self.children:
             for child in self.children:
                 child.setParent(parent)
+
+    def isAvailable(self):
+        """ visible with the approval
+        """
+        content = self.content
+
+        if IContentDiscussion(content).status == 4:
+            if not checkPermission('zojax.ModifyContent', content):
+                return self.approved
+
+        return True
 
 
 class CommentOwnership(object):

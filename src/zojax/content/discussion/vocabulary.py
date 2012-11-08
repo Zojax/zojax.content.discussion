@@ -29,6 +29,7 @@ _ = MessageFactory('zojax.content.discussion')
 
 commentPolicyVocabulary = SimpleVocabulary(
     [SimpleTerm(1, 'open', 'Open'),
+     SimpleTerm(4, 'approval', 'Open with approval'),
      SimpleTerm(2, 'closed', 'Closed'),
      SimpleTerm(3, 'disabled', 'Disabled')])
 
@@ -38,6 +39,8 @@ commentPolicyVocabulary.getTerm(2).description = _(
     'Existing comments will be displayed, new comments are not allowed.')
 commentPolicyVocabulary.getTerm(3).description = _(
     'Comments will not be displayed, new comments are not allowed.')
+commentPolicyVocabulary.getTerm(4).description = _(
+    'Comments are allowed but require approval for non auth users.')
 
 postCommentPositionVocabulary = SimpleVocabulary(
     [SimpleTerm(1, 'under', _('Under comments')),

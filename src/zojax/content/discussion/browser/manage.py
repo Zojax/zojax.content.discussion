@@ -27,6 +27,7 @@ from zojax.ownership.interfaces import IOwnership
 from zojax.batching.batch import Batch
 
 from zojax.wizard.interfaces import ISaveAction
+from zojax.layoutform.interfaces import ICancelAction
 from zojax.content.forms import wizardedit
 from zojax.statusmessage.interfaces import IStatusMessage
 from zojax.content.discussion.interfaces import _, IContentDiscussion
@@ -86,6 +87,12 @@ class EditContentWizard(wizardedit.EditContentWizard):
         if not self.step.isComplete():
             return
         self.redirect("%s/" % absoluteURL(self.context.content, self.request))
+
+    @button.handler(ICancelAction)
+    def handleCancel(self, action):
+        self._finishedAdd = True
+        self.redirect("%s/" % absoluteURL(self.context.content, self.request))
+        IStatusMessage(self.request).add(self.formCancelMessage)
 
     def isLastStep(self):
         return True

@@ -6,7 +6,7 @@
     padding-top: 2em;
   }
 
-  .z-comment { 
+  .z-comment {
     padding: 1em;
   }
 
@@ -15,7 +15,7 @@
     border-bottom: borderWidth dotted globalBorderColor;
   }
 
-  .z-comment table { 
+  .z-comment table {
     width: 100%;
   }
 
@@ -40,23 +40,35 @@
     height: auto;
   }
 
-  .z-comment-info { 
+  .z-comment-info {
     font-size: 90%;
     color: discreetColor;
     margin-bottom: 0.5em;
     border-bottom: borderWidth dotted globalBorderColor;
   }
 
-  .z-content-discussion #discussion { 
+  .z-content-discussion #discussion {
     margin-top: 2em;
   }
 
-  .z-content-discussion .z-form-label { 
+  .z-content-discussion .z-form-label {
     font-weight: normal !important;
   }
 
-  .z-content-discussion textarea { 
+  .z-content-discussion textarea {
     width: 100%;
+  }
+
+  .comment-notapproved {
+    background-color: #FFE4E4 !important;
+  }
+
+  .not-approved-configlet {
+    width: 100% !important;
+  }
+
+  .discussion-widgets-approved {
+    display: none;
   }
 
 }

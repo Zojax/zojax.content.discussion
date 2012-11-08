@@ -16,6 +16,9 @@
 $Id$
 """
 import os, unittest, doctest
+
+from mock import Mock
+
 from zope import interface, component, event
 from zope.app.testing import functional
 from zope.app.component.hooks import setSite
@@ -32,6 +35,8 @@ from zojax.content.type.item import PersistentItem
 from zojax.catalog.catalog import Catalog, ICatalog
 from zojax.personal.space.manager import PersonalSpaceManager, IPersonalSpaceManager
 
+from zojax.widget.captcha.validator import CaptchaValidator
+
 
 zojaxContentDiscussionLayer = functional.ZCMLLayer(
     os.path.join(os.path.split(__file__)[0], 'ftesting.zcml'),
@@ -45,6 +50,7 @@ class IContent(IItem):
 class Content(PersistentItem):
     interface.implements(IContent, IActivityAware)
 
+CaptchaValidator.validate = Mock(return_value=True)
 
 def FunctionalDocFileSuite(*paths, **kw):
     layer = zojaxContentDiscussionLayer
@@ -82,7 +88,6 @@ def FunctionalDocFileSuite(*paths, **kw):
         event.notify(ObjectCreatedEvent(content))
         IOwnership(content).ownerId = 'zope.user'
         root['content'] = content
-
 
     kw['setUp'] = setUp
 

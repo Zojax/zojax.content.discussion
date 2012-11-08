@@ -1,4 +1,6 @@
-<div class="z-comment">
+<div tal:define="approved python: not view.isApproved() and ' comment-notapproved' or '';"
+     tal:attributes="class string:z-comment${approved}">
+
   <a tal:attributes="name string:comment${context/__name__}"></a>
   <table>
     <tbody>

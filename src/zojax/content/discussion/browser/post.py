@@ -18,10 +18,15 @@ $Id$
 import cgi, pytz
 from datetime import datetime
 
+from z3c.form.interfaces import HIDDEN_MODE
+
 from zope import interface
 from zope.event import notify
+from zope.component import getUtility
 from zope.security import checkPermission
 from zope.interface.common.idatetime import ITZInfo
+from zope.lifecycleevent import ObjectModifiedEvent
+from zope.app.security.interfaces import IAuthentication
 
 from zojax.cache.view import cache
 from zojax.cache.keys import PrincipalAndContext
@@ -46,7 +51,6 @@ def PostCommentKey(object, instance, *args, **kw):
 
 class PostCommentForm(PageletForm):
 
-    fields = Fields(IComment)
     ignoreContext = True
     label = _(u'Discuss')
     prefix = 'discussion.'
@@ -55,8 +59,21 @@ class PostCommentForm(PageletForm):
         super(PostCommentForm, self).__init__(context, *args)
 
         self.discussion = IContentDiscussion(context)
-        self.postsAllowed = (self.discussion.status == 1 and
+        self.postsAllowed = (self.discussion.status in [1, 4] and
                              checkPermission('zojax.AddComment', context))
+
+        if self.isPrincipal():
+            self.approved = True
+
+    @property
+    def fields(self):
+        fields = Fields(IComment)
+        fields['approved'].mode = HIDDEN_MODE
+
+        if self.isPrincipal():
+            fields = fields.omit('captcha', 'authorName')
+
+        return fields
 
     @button.buttonAndHandler(_('Post your comment'), name='post')
     def handlePost(self, action):
@@ -74,11 +91,28 @@ class PostCommentForm(PageletForm):
 
             comment = discussion.add(comment)
 
+            if 'authorName' in data:
+                comment.authorName = data['authorName']
+
+            if self.isPrincipal():
+                comment.approved = True
+
+            # send modified event for original or new object
+            notify(ObjectModifiedEvent(comment))
+
             IStatusMessage(self.request).add(_('Comment has been added.'))
             self.redirect('%s#comments'%self.request.getURL())
 
     def isAvailable(self):
         return self.postsAllowed
+
+    def isPrincipal(self):
+        try:
+            principal = getUtility(IAuthentication).authenticate(self.request)
+        except:
+            principal = None
+
+        return bool(principal)
 
     @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
     def updateAndRender(self):
@@ -87,10 +121,19 @@ class PostCommentForm(PageletForm):
 
 class PostComment(PageletForm):
 
-    fields = Fields(IComment)
     ignoreContext = True
     label = _(u'Reply to')
     replyto = None
+
+    @property
+    def fields(self):
+        fields = Fields(IComment)
+        fields['approved'].mode = HIDDEN_MODE
+
+        if self.isPrincipal():
+            fields = fields.omit('captcha', 'authorName')
+
+        return fields
 
     def update(self):
         self.discussion = IContentDiscussion(self.context, None)
@@ -104,6 +147,9 @@ class PostComment(PageletForm):
         if self.replyto is None:
             self.redirect('.')
             return
+
+        if self.isPrincipal():
+            self.approved = True
 
         super(PostComment, self).update()
 
@@ -124,8 +170,25 @@ class PostComment(PageletForm):
             comment = discussion.add(comment)
             comment.setParent(self.replyto)
 
+            if 'authorName' in data:
+                comment.authorName = data['authorName']
+
+            if self.isPrincipal():
+                comment.approved = True
+
+            # send modified event for original or new object
+            notify(ObjectModifiedEvent(comment))
+
             IStatusMessage(self.request).add(_('Comment has been added.'))
             self.redirect('%s#comments'%self.request.getURL())
+
+    def isPrincipal(self):
+        try:
+            principal = getUtility(IAuthentication).authenticate(self.request)
+        except:
+            principal = None
+
+        return bool(principal)
 
     @button.buttonAndHandler(_('Cancel'), name='cancel', provides=ICancelButton)
     def handleCancel(self, action):

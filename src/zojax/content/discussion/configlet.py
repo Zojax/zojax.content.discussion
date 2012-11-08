@@ -15,6 +15,8 @@
 
 $Id$
 """
+import logging
+
 from zope import interface, component
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
@@ -24,6 +26,7 @@ from zojax.content.discussion.cache import CommentsTag
 from  interfaces import IContentDiscussionConfig, \
                  IContentDiscussionConfiglet
 
+logger = logging.getLogger('zojax.content.discussion (configlet)')
 
 class ContentDiscussionConfiglet(object):
     pass

@@ -47,7 +47,7 @@ def bootstrapSubscriber(ev):
     def findObjectsProviding(root):
         if ISite.providedBy(root):
             yield root
-            
+
         try:
             if len(getParents(root)) > 3:
                 raise StopIteration()
@@ -69,7 +69,7 @@ def bootstrapSubscriber(ev):
                     continue
                 try:
                     if len(list(catalog)) != len(list(catalog.getIndexes())):
-                        logger.info('Updating Discussion Catalog Indexes...')
+                        logger.info('Updating Discussion Catalog Indexes... (for %s)' % portal.title)
                         catalog.clear()
                         catalog.updateIndexes()
                         logger.info('Done!')

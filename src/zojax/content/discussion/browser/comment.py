@@ -49,9 +49,25 @@ class CommentView(object):
             self.avatar = u'%s/@@profile.avatar/0'%absoluteURL(
                 getSite(), self.request)
 
+        if author is not None or author == u'Unauthenticated User':
+            if getattr(self.context, 'authorName'):
+                self.author = self.context.authorName
+
         self.comment = self.context.comment
 
         content = self.context.content
         self.postsAllowed = (
-            IContentDiscussion(content).status == 1 and
+            IContentDiscussion(content).status in [1, 4] and
             checkPermission('zojax.AddComment', content))
+
+    def isApproved(self):
+        """ visible with the approval
+        """
+
+        content = self.context.content
+
+        if IContentDiscussion(content).status == 4:
+            if checkPermission('zojax.ModifyContent', content):
+                return self.context.approved
+
+        return True

@@ -23,7 +23,7 @@ from zope.app.component.hooks import getSite
 from zope.app.intid.interfaces import \
     IIntIds, IIntIdAddedEvent, IIntIdRemovedEvent
 from zope.lifecycleevent import ObjectCreatedEvent
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent, IObjectModifiedEvent
 from zope.app.container.interfaces import IObjectAddedEvent
 from zc.catalog.catalogindex import SetIndex, ValueIndex
 
@@ -38,7 +38,7 @@ from interfaces import IComment, ICommentsCatalog
 
 class CommentsCatalog(catalog.Catalog):
     interface.implements(ICommentsCatalog)
-    
+
     def createIndex(self, name, factory):
         index = factory()
         event.notify(ObjectCreatedEvent(index))
@@ -63,10 +63,10 @@ class CommentsCatalog(catalog.Catalog):
         for name, indexFactory in component.getAdapters((self,), ICatalogIndexFactory):
             if name not in names:
                 yield self.createIndex(name, indexFactory)
-    
+
     def values(self):
         return self.getIndexes()
-        
+
     def index_doc(self, docid, texts):
         if not IComment.providedBy(texts):
             return
@@ -147,8 +147,16 @@ def getCatalog():
         return sm['commentsCatalog']
 
 
+#@component.adapter(IComment, IObjectAddedEvent)
 @component.adapter(IComment, IIntIdAddedEvent)
 def commentAdded(comment, ev):
+    comment = removeAllProxies(comment)
+    catalog = removeAllProxies(getCatalog())
+    catalog.index_doc(getUtility(IIntIds).getId(comment), comment)
+
+
+@component.adapter(IComment, IObjectModifiedEvent)
+def commentModified(comment, ev):
     comment = removeAllProxies(comment)
     catalog = removeAllProxies(getCatalog())
     catalog.index_doc(getUtility(IIntIds).getId(comment), comment)
@@ -171,7 +179,7 @@ class Factory(object):
 
     def __init__(self, catalog):
         self.catalog = catalog
-        
+
 
 class IndexableSecurityInformation(object):
 
@@ -207,17 +215,17 @@ class AuthorIndex(Factory):
     def __call__(self):
         return ValueIndex('author')
 
-    
+
 class AccessIndex(Factory):
     def __call__(self):
         return SetIndex('value', IndexableSecurityInformation)
 
-    
+
 class DateIndex(Factory):
     def __call__(self):
         return DateTimeValueIndex('date', resolution=4)
 
-    
+
 class ContentIndex(Factory):
     def __call__(self):
         return ValueIndex('value', IndexableContent)
@@ -238,3 +246,7 @@ class IndexableType(object):
             self.value = IContentType(removeAllProxies(comment.content), None).name
         except AttributeError:
             self.value = default
+
+class ApprovedIndex(Factory):
+    def __call__(self):
+        return ValueIndex('approved')

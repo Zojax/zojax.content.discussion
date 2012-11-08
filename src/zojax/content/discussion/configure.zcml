@@ -84,7 +84,7 @@
        permission="zope.View"
        interface="zojax.content.feeds.interfaces.IFeed" />
   </class>
-  
+
   <!-- configlet -->
   <zojax:configlet
      name="content.discussion"
@@ -93,16 +93,36 @@
      class=".configlet.ContentDiscussionConfiglet"
      schema=".interfaces.IContentDiscussionConfiglet"
      permission="zojax.Configure" />
-     
+
+   <!-- configlet configure -->
+   <zojax:pagelet
+      name="index.html"
+      for=".interfaces.IContentDiscussionConfiglet"
+      class="zojax.controlpanel.browser.wizard.ConfigletEditWizard"
+      permission="zojax.Configure" />
+
+  <!-- configlet rebuild -->
+  <zojax:pagelet
+     name="not_approved_comments"
+     type="wizard.step"
+     title="Manage Comments"
+     label="Not Approved Comments"
+     for=".interfaces.IContentDiscussionConfiglet
+          zojax.controlpanel.browser.interfaces.IConfigletEditWizard"
+     template="browser/notapprovedcomments.pt"
+     class=".browser.configlet.NotApprovedCommentsView"
+     permission="zojax.Configure"
+     weight="200" />
+
   <adapter factory=".configlet.getConfig" />
   <subscriber handler=".configlet.configletModified" />
-  
+
   <adapter factory=".comment.CommentOwnership" />
-  
+
   <class class="zojax.content.discussion.comment.Comment">
     <implements interface="zojax.ownership.interfaces.IOwnerAware" />
   </class>
-  
+
   <utility
      name="zojax.content.discussion.portlet-portaltypes"
      factory=".vocabulary.PortletTypesVocabulary" />
@@ -118,7 +138,7 @@
 
   <!-- top contributors -->
   <include file="topcontributors.zcml" />
-  
+
   <!-- bootstrap -->
   <include file="bootstrap.zcml" />
 
@@ -127,7 +147,7 @@
 
   <!-- translations -->
   <i18n:registerTranslations directory="locales"/>
-  
+
   <!-- generations -->
   <utility
      name="zojax.content.discussion"

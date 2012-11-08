@@ -60,6 +60,13 @@
           .edit.ContentDiscussonEdit * zojax.widget.radio.interfaces.ITermItem"
      template="edititem.pt" />
 
+  <zojax:pagelet
+     name="approval"
+     type="pagelet"
+     for="..interfaces.IDiscussible
+          .edit.ContentDiscussonEdit * zojax.widget.radio.interfaces.ITermItem"
+     template="edititem.pt" />
+
   <!-- recent comments portlet view -->
   <zojax:pagelet
      type="portlet.view"
@@ -85,14 +92,23 @@
      class=".delete.DeleteContent"
      permission="zojax.DeleteContent" />
 
+  <!-- edit content step -->
+  <zojax:pagelet
+     name="content"
+     type="wizard.step"
+     for="zojax.content.discussion.interfaces.IComment
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     class=".commentedit.CommentEditForm"
+     permission="zojax.ModifyContent"
+     weight="100" />
+
   <!-- edit content wizard -->
   <zojax:pagelet
      name="context.html"
      for="zojax.content.discussion.interfaces.IComment"
      class=".manage.EditContentWizard"
      allowed_attributes="actions upperContainer"
-     permission="zojax.ModifyContent"
-  />
+     permission="zojax.ModifyContent" />
 
   <zojax:pagelet
      type="form.viewspaceInfo"

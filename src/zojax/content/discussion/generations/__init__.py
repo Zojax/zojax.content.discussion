@@ -19,5 +19,5 @@ from zope.app.generations.generations import SchemaManager
 
 schemaManager = SchemaManager(
     minimum_generation=0,
-    generation=0,
+    generation=1,
     package_name='zojax.content.discussion.generations')

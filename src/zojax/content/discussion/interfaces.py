@@ -18,6 +18,7 @@ $Id$
 from zope import interface, schema
 from zope.i18nmessageid import MessageFactory
 from zope.component.interfaces import IObjectEvent, ObjectEvent
+from zojax.widget.captcha.field import Captcha
 from zojax.widget.radio.field import RadioChoice
 from zojax.content.feeds.interfaces import IRSS2Feed
 from zojax.content.discussion.vocabulary import commentPolicyVocabulary, \
@@ -49,11 +50,21 @@ class IComment(interface.Interface):
 
     title = interface.Attribute('Title')
 
+    authorName = schema.TextLine(
+        title = _(u'Your Name'),
+        required = True)
+
     comment = schema.Text(
         title = _(u'Comment'),
         required = True)
 
     content = interface.Attribute('Content')
+
+    captcha = Captcha()
+
+    approved = schema.Bool(
+        title = _(u'Approved'),
+        default = False)
 
 
 class ISimpleComment(IComment):
@@ -125,7 +136,7 @@ class ICommentsCatalog(interface.Interface):
 
 class IRecentCommentsPortlet(interface.Interface):
     """ recent comments portlet """
-    
+
     label = schema.TextLine(
         title = _(u'Label'),
         required = False)
@@ -135,7 +146,7 @@ class IRecentCommentsPortlet(interface.Interface):
         description = _(u'Number of comments to display'),
         default = 10,
         required = True)
-    
+
     types = schema.List(
         title = _(u'Portal types'),
         description = _('Portal types to list in portlet.'),

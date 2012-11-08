@@ -17,6 +17,9 @@ Browser tests
     >>> user.addHeader("Authorization", "Basic user:userpw")
     >>> user.handleErrors = False
 
+    >>> anon = Browser()
+    >>> anon.handleErrors = False
+
 
 Enable discussion
 -----------------
@@ -276,29 +279,38 @@ Recent comments for content
     <?xml version="1.0" encoding="UTF-8"?>
     <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
-        <title>Content comments</title>
+        <title>Content comments
+    </title>
         <link>http://localhost/content/</link>
         <description>Recent comments for this content item.</description>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         <atom:link rel="self" type="application/rss+xml"
                    href="http://localhost/content/@@feeds/comments"/>
         <item>
           <title>by Manager</title>
-          <description>Test comment from admin</description>
+          <description type="html"><![CDATA[Test comment from admin]]></description>
           <guid isPermaLink="true">http://localhost/content/#comments001</guid>
           <link>http://localhost/content/</link>
           <author> (Manager)</author>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
         <item>
           <title>by User</title>
-          <description>Test comment from user</description>
+          <description type="html"><![CDATA[Test comment from user]]></description>
           <guid isPermaLink="true">http://localhost/content/#comments002</guid>
           <link>http://localhost/content/</link>
           <author> (User)</author>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
       </channel>
     </rss>
+    <BLANKLINE>
 
 
 Recent comments portlet
@@ -342,29 +354,38 @@ RSS Feed
     <?xml version="1.0" encoding="UTF-8"?>
     <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
-        <title>Recent comments</title>
+        <title>Recent comments
+    </title>
         <link>http://localhost/</link>
         <description>Recently added comments.</description>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         <atom:link rel="self" type="application/rss+xml"
                    href="http://localhost/@@feeds/comments"/>
         <item>
           <title>by User on </title>
-          <description>Test comment from user</description>
+          <description type="html"><![CDATA[Test comment from user]]></description>
           <guid isPermaLink="true">http://localhost/content/#comments002</guid>
           <link>http://localhost/content/</link>
           <author> (User)</author>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
         <item>
           <title>by Manager on </title>
-          <description>Test comment from admin</description>
+          <description type="html"><![CDATA[Test comment from admin]]></description>
           <guid isPermaLink="true">http://localhost/content/#comments001</guid>
           <link>http://localhost/content/</link>
           <author> (Manager)</author>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
       </channel>
     </rss>
+    <BLANKLINE>
 
 
 Manage comments
@@ -504,6 +525,215 @@ Threaded comments
     >>> [c.__name__ for c in comment01.children]
     []
 
+
+Discussion with Approval
+------------------------
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> admin.getLink('Content').click()
+    >>> admin.getControl(name="content.discussion.widgets.status:list").value = ['approval']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+    >>> admin.getLink('View').click()
+
+    >>> sync()
+
+Add comment as a manager
+
+    >>> admin.open('http://localhost/content/')
+    >>> print admin.contents
+    <html>
+    ...Post your comment...
+    </html>
+
+    >>> admin.getControl('Comment').value = u'Phasellus porta cursus odio, at posuere.'
+    >>> admin.getControl('Post your comment').click()
+
+    >>> admin.open('http://localhost/content/')
+    >>> print admin.contents
+    <html>
+    ...
+    ...<div class="z-comment">
+      <a name="comment005"></a>
+      <table>
+        <tbody>
+          <tr>
+      <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+      </td>
+      <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+            at
+            ...
+            <a href="postcomment.html?replyto=005">Reply</a>
+    <BLANKLINE>
+          </span>
+        </div>
+        <div class="z-comment-text">Phasellus porta cursus odio, at posuere.</div>
+      </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    ...
+    </html>
+
+Add comment as an authorized user
+
+    >>> user.open('http://localhost/content/')
+    >>> print user.contents
+    <html>
+    ...Post your comment...
+    </html>
+
+    >>> user.getControl('Comment').value = u'Ut convallis condimentum sem a volutpat.'
+    >>> user.getControl('Post your comment').click()
+
+    >>> print user.contents
+    <html>
+    ...
+      <h3>
+        <a title="Comments rss feed" href="http://localhost/content/@@feeds/comments">
+          <img src="http://localhost/@@/rss-icon.png" />
+        </a>
+        Comments (3)
+      </h3>
+      ...
+      ...<div class="z-comment">
+      <a name="comment006"></a>
+      <table>
+        <tbody>
+          <tr>
+      <td class="z-comment-avatar">
+        <img src="http://localhost/@@profile.avatar/0" />
+      </td>
+      <td class="z-comment-body">
+        <div class="z-comment-info">
+          <span>
+            Posted by
+            <a href="http://localhost/people/user/">User</a>
+            at
+            ...
+            <a href="postcomment.html?replyto=006">Reply</a>
+    <BLANKLINE>
+          </span>
+        </div>
+        <div class="z-comment-text">Ut convallis condimentum sem a volutpat.</div>
+      </td>
+          </tr>
+        </tbody>
+      </table>
+    </div></div>
+    ...
+    </html>
+
+Add comment as an anonymous user
+
+    >>> anon.open('http://localhost/content/')
+    >>> print anon.contents
+    <html>
+    ...Post your comment...
+    </html>
+
+    >>> anon.getControl('Your Name').value = u'anon user'
+    >>> anon.getControl('Comment').value = u'Nunc fermentum semper nibh, non posuere.'
+    >>> anon.getControl('Post your comment').click()
+
+    >>> #print anon.contents
+
+Manage comments
+
+    >>> admin.open('http://localhost/content/context.html')
+    >>> admin.getLink('Content').click()
+    >>> print admin.contents
+    <html>
+    ...
+    <div class="z-listing-details">
+       <span>Open with approval</span>
+    <BLANKLINE>
+          <a href=".../managediscussion">(Configure)</a>
+    <BLANKLINE>
+       <div>Comments are allowed but require approval for non auth users.</div>
+    </div>
+    ...
+    </html>
+
+    >>> admin.getLink('(Configure)').click()
+    >>> print admin.contents
+    <html>
+    ...
+          <input type="checkbox" name="commentIds:list" value="005" />
+    ...
+            Posted by
+            <a href="http://localhost/people/manager/">Manager</a>
+    ...
+        <div class="z-comment-text">Phasellus porta cursus odio, at posuere.</div>
+    ...
+          <input type="checkbox" name="commentIds:list" value="006" />
+    ...
+            Posted by
+            <a href="http://localhost/people/user/">User</a>
+    ...
+        <div class="z-comment-text">Ut convallis condimentum sem a volutpat.</div>
+    ...
+          <input type="checkbox" name="commentIds:list" value="007" />
+    ...
+      ...<div class="z-comment comment-notapproved">
+    ...
+            Posted by
+            anon user
+    ...
+        <div class="z-comment-text">Nunc fermentum semper nibh, non posuere.</div>
+    ...
+    </html>
+
+Approve comment
+
+    >>> admin.open('http://localhost/content/managediscussion/007/context.html')
+    >>> admin.getControl(name="content.widgets.approved:list").value = ['true']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+
+    >>> print admin.contents
+    <html>
+    ...Data successfully updated...
+    </html>
+
+Now anonymous user can see his comment
+
+    >>> anon.open('http://localhost/content/')
+    >>> print anon.contents
+    <html>
+    ...
+    ...<div class="z-comment">
+    ...
+      <a name="comment007"></a>
+    ...
+            Posted by
+            anon user
+    ...
+        <div class="z-comment-text">Nunc fermentum semper nibh, non posuere.</div>
+    ...
+    </html>
+
+Delete comments created with approval
+
+    >>> [c for c in discussion]
+    [u'001', u'005', u'006', u'007']
+
+    >>> admin.open('http://localhost/content/managediscussion/')
+    >>> admin.getControl(name="commentIds:list").value = ['005', '006', '007']
+    >>> admin.getControl('Remove').click()
+    >>> print admin.contents
+    <html>
+    ...Selected comments have been removed...
+    </html>
+
+    >>> admin.getControl('Back').click()
+
+    >>> [c for c in discussion]
+    [u'001']
 
 Close discussion
 ----------------

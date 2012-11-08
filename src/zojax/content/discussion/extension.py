@@ -23,6 +23,7 @@ from zope import interface, component, event
 from zope.proxy import removeAllProxies
 from zope.app.intid.interfaces import IIntIdAddedEvent, IIntIdRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.securitypolicy.interfaces import IRolePermissionManager
 from zope.app.container.interfaces import \
     IObjectAddedEvent, IObjectRemovedEvent, IContainerModifiedEvent
 
@@ -48,6 +49,12 @@ class ContentDiscussionExtension(ContentContainerExtension):
     @setproperty
     def status(self, value):
         context = removeAllProxies(self.context)
+
+        roleper = IRolePermissionManager(context)
+        if value == 4:
+            roleper.grantPermissionToRole('zojax.AddComment', 'zope.Anonymous')
+        else:
+            roleper.denyPermissionToRole('zojax.AddComment', 'zope.Anonymous')
 
         if value == 3:
             if IContentDiscussionAware.providedBy(context):
