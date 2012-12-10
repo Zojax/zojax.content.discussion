@@ -26,6 +26,7 @@
        </tal:block>
       </span>
     </div>
+    <em tal:condition="python: not view.isApproved()" class="comment-awaiting-moderation">The comment is awaiting moderation.</em>
     <div class="z-comment-text" tal:content="structure view/comment"></div>
   </td>
       </tr>

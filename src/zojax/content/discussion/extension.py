@@ -21,6 +21,7 @@ from rwproperty import getproperty, setproperty
 
 from zope import interface, component, event
 from zope.proxy import removeAllProxies
+from zope.security import checkPermission
 from zope.app.intid.interfaces import IIntIdAddedEvent, IIntIdRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.securitypolicy.interfaces import IRolePermissionManager
@@ -29,6 +30,8 @@ from zope.app.container.interfaces import \
 
 from zojax.cache.tag import ContextTag
 from zojax.extensions.container import ContentContainerExtension
+
+from catalog import getCatalog
 
 from interfaces import CommentAddedEvent, CommentRemovedEvent
 from interfaces import IComment, IDiscussible, IOpenDiscussible
@@ -103,6 +106,20 @@ class ContentDiscussionExtension(ContentContainerExtension):
 
         self[name] = comment
         return self[name]
+
+    def __len__(self):
+        context = self.context
+        length = len(self.data)
+
+        if self.status == 4 and \
+                            not checkPermission('zojax.ModifyContent', context):
+            catalog = getCatalog()
+
+            length = len(catalog.search(
+                content=context,
+                approved=(True,)))
+
+        return length
 
 
 @component.adapter(IComment, IObjectAddedEvent)

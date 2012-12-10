@@ -21,6 +21,7 @@ from persistent import Persistent
 from zope.location import Location
 from zope.proxy import removeAllProxies
 from zope.security import checkPermission
+from zope.schema.fieldproperty import FieldProperty
 from zope.traversing.browser import absoluteURL
 from zope.app.container.interfaces import IObjectRemovedEvent
 
@@ -29,7 +30,8 @@ from zojax.ownership.interfaces import IOwnership
 from zojax.security.utils import getPrincipal
 
 from interfaces import ISimpleComment, IThreadedComment, IContentDiscussion
-from zope.schema.fieldproperty import FieldProperty
+
+from utils import getAthorFromCookie
 
 
 class Comment(Persistent, Location):
@@ -104,6 +106,11 @@ class Comment(Persistent, Location):
 
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
+
+                cookieAuthor = getAthorFromCookie(getRequest())
+                if cookieAuthor == self.authorName:
+                    return True
+
                 return self.approved
 
         return True

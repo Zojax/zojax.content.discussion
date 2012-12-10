@@ -86,7 +86,7 @@ class CommentsCatalog(catalog.Catalog):
                     index.index_doc(uid, obj)
 
     def search(self, content=None,
-               contexts=(), sort_on='date', sort_order='reverse', types=()):
+               contexts=(), sort_on='date', sort_order='reverse', types=(), approved=()):
         ids = getUtility(IIntIds)
         indexes = list(self.values())
 
@@ -116,6 +116,10 @@ class CommentsCatalog(catalog.Catalog):
             users.append('zope.Anonymous')
 
         query['access'] = {'any_of': users}
+
+        # comments approved
+        if approved:
+            query['approved'] = {'any_of': approved}
 
         # apply searh terms
         results = self.apply(query)

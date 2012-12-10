@@ -15,12 +15,13 @@
 
 $Id$
 """
-import cgi, pytz
+import cgi, pytz, time
 from datetime import datetime
 
 from z3c.form.interfaces import HIDDEN_MODE
 
 from zope import interface
+from zope.app.http.httpdate import build_http_date
 from zope.event import notify
 from zope.component import getUtility
 from zope.security import checkPermission
@@ -36,8 +37,11 @@ from zojax.cache.interfaces import DoNotCache
 from zojax.layoutform import button, Fields, PageletForm
 from zojax.layoutform.interfaces import ICancelButton
 from zojax.statusmessage.interfaces import IStatusMessage
+
 from zojax.content.discussion.comment import Comment
 from zojax.content.discussion.interfaces import _, IComment, IContentDiscussion
+from zojax.content.discussion.utils import getVariablesForCookie, getAthorFromCookie
+
 
 
 def PostCommentKey(object, instance, *args, **kw):
@@ -75,33 +79,52 @@ class PostCommentForm(PageletForm):
 
         return fields
 
+    def updateWidgets(self):
+        super(PostCommentForm, self).updateWidgets()
+        if not self.isPrincipal():
+            # NOTE: get name from cookie
+            self.widgets['authorName'].value = getAthorFromCookie(self.request)
+
     @button.buttonAndHandler(_('Post your comment'), name='post')
     def handlePost(self, action):
+        request = self.request
+
         data, errors = self.extractData()
         if errors:
-            IStatusMessage(self.request).add(
+            IStatusMessage(request).add(
                 _('Please fix indicated errors.'), 'warning')
         else:
             discussion = IContentDiscussion(self.context)
 
             commentText = cgi.escape(data['comment']).replace('\n', '<br />')
 
-            comment = Comment(self.request.principal.id, commentText)
-            comment.date = datetime.now(ITZInfo(self.request, pytz.utc))
+            comment = Comment(request.principal.id, commentText)
+            comment.date = datetime.now(ITZInfo(request, pytz.utc))
 
             comment = discussion.add(comment)
 
             if 'authorName' in data:
                 comment.authorName = data['authorName']
 
+                # NOTE: set cookie for anon
+                if not self.isPrincipal():
+                    cookie_var = getVariablesForCookie(request)
+                    expires = build_http_date(time.time() + 30000000) #347 days
+                    request.response.setCookie(cookie_var['name'],
+                                               data['authorName'],
+                                               path=cookie_var['path'],
+                                               expires=expires)
+
+            msg = _('Your comment is awaiting moderation.')
             if self.isPrincipal():
                 comment.approved = True
+                msg = _('Comment has been added.')
 
-            # send modified event for original or new object
+            # NOTE: send modified event for original or new object
             notify(ObjectModifiedEvent(comment))
 
-            IStatusMessage(self.request).add(_('Comment has been added.'))
-            self.redirect('%s#comments'%self.request.getURL())
+            IStatusMessage(request).add(msg)
+            self.redirect('%s#comments'%request.getURL())
 
     def isAvailable(self):
         return self.postsAllowed
@@ -153,19 +176,27 @@ class PostComment(PageletForm):
 
         super(PostComment, self).update()
 
+    def updateWidgets(self):
+        super(PostComment, self).updateWidgets()
+        if not self.isPrincipal():
+            # NOTE: get name from cookie
+            self.widgets['authorName'].value = getAthorFromCookie(self.request)
+
     @button.buttonAndHandler(_('Reply to this comment'), name='post')
     def handlePost(self, action):
+        request = self.request
+
         data, errors = self.extractData()
         if errors:
-            IStatusMessage(self.request).add(
+            IStatusMessage(request).add(
                 _('Please fix indicated errors.'), 'warning')
         else:
             discussion = IContentDiscussion(self.context)
 
             commentText = cgi.escape(data['comment']).replace('\n', '<br />')
 
-            comment = Comment(self.request.principal.id, commentText)
-            comment.date = datetime.now(ITZInfo(self.request, pytz.utc))
+            comment = Comment(request.principal.id, commentText)
+            comment.date = datetime.now(ITZInfo(request, pytz.utc))
 
             comment = discussion.add(comment)
             comment.setParent(self.replyto)
@@ -173,14 +204,25 @@ class PostComment(PageletForm):
             if 'authorName' in data:
                 comment.authorName = data['authorName']
 
+                # NOTE: set cookie for anon
+                if not self.isPrincipal():
+                    cookie_var = getVariablesForCookie(request)
+                    expires = build_http_date(time.time() + 30000000) #347 days
+                    request.response.setCookie(cookie_var['name'],
+                                               data['authorName'],
+                                               path=cookie_var['path'],
+                                               expires=expires)
+
+            msg = _('Your comment is awaiting moderation.')
             if self.isPrincipal():
                 comment.approved = True
+                msg = _('Comment has been added.')
 
             # send modified event for original or new object
             notify(ObjectModifiedEvent(comment))
 
-            IStatusMessage(self.request).add(_('Comment has been added.'))
-            self.redirect('%s#comments'%self.request.getURL())
+            IStatusMessage(request).add(msg)
+            self.redirect('%s#comments'%request.getURL())
 
     def isPrincipal(self):
         try:

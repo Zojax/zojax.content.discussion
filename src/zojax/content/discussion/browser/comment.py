@@ -67,7 +67,6 @@ class CommentView(object):
         content = self.context.content
 
         if IContentDiscussion(content).status == 4:
-            if checkPermission('zojax.ModifyContent', content):
-                return self.context.approved
+            return self.context.approved
 
         return True

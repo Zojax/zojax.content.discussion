@@ -641,7 +641,12 @@ Add comment as an anonymous user
     >>> anon.getControl('Comment').value = u'Nunc fermentum semper nibh, non posuere.'
     >>> anon.getControl('Post your comment').click()
 
-    >>> #print anon.contents
+    >>> print anon.contents
+    <html>
+    ...
+    ...<div class="statusMessage">Your comment is awaiting moderation.</div>
+    ...
+    </html>
 
 Manage comments
 
