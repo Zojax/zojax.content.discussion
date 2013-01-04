@@ -18,6 +18,8 @@ $Id$
 from zope import interface, schema
 from zope.i18nmessageid import MessageFactory
 from zope.component.interfaces import IObjectEvent, ObjectEvent
+
+from zojax.principal.field import UserField
 from zojax.widget.captcha.field import Captcha
 from zojax.widget.radio.field import RadioChoice
 from zojax.content.feeds.interfaces import IRSS2Feed
@@ -187,6 +189,14 @@ class IContentDiscussionConfig(interface.Interface):
         vocabulary = commentsOrderVocabulary,
         default = 1,
         required = True)
+
+    notifyUsers =  schema.Tuple(
+        title = _(u'Users for unapproved notifications'),
+        description = _(u'These users will receive notifications '
+                        u'about unapproved comments.'),
+        value_type = UserField(),
+        required = False,
+        default = ())
 
 
 class IContentDiscussionConfiglet(IContentDiscussionConfig):

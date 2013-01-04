@@ -18,13 +18,14 @@ $Id$
 from zope import interface, component
 from zope.component import getUtility, getAdapter
 from zope.app.intid.interfaces import IIntIdAddedEvent
+from zope.app.container.interfaces import IObjectAddedEvent
 
 from zojax.subscription.interfaces import SubscriptionException
 from zojax.subscription.interfaces import ISubscriptionDescription
 from zojax.content.notifications.utils import sendNotification
 from zojax.content.notifications.notification import Notification
 
-from interfaces import _, ISimpleComment, IDiscussible
+from interfaces import _, ISimpleComment, IDiscussible, IContentDiscussionConfig
 from interfaces import ICommentsNotification, ICommentsNotificationsAware
 
 
@@ -45,18 +46,41 @@ class CommentsNotificationDescription(object):
     description = _(u'Recently added comments.')
 
 
-@component.adapter(ISimpleComment, IIntIdAddedEvent)
+@component.adapter(ISimpleComment, IObjectAddedEvent)
 def commentAdded(comment, ev):
-    if ICommentsNotificationsAware.providedBy(comment.content):
-        #check subscribe
-        notification = getAdapter(comment.content, ICommentsNotification, 'comments')
+    """ sends emails when the comment is created """
+    if not ICommentsNotificationsAware.providedBy(comment.content):
+        return
+
+    notification = getAdapter(comment.content, ICommentsNotification, 'comments')
+
+    if comment.isAvailable():
+        # check subscribe
         try:
             if not notification.isSubscribedInParents():
                 notification.subscribe()
         except SubscriptionException:
             pass
+
         # send notification
         sendNotification('comments', comment.content, comment)
+    else:
+        configlet = getUtility(IContentDiscussionConfig)
+        if configlet.notifyUsers:
+            # subscribe
+            for principal in configlet.notifyUsers:
+                try:
+                    if not notification.isSubscribedInParents(comment.content, principal):
+                        notification.subscribe(principal)
+                except SubscriptionException:
+                    pass
+
+            # send notification
+            sendNotification('comments', comment.content, comment, principal={'any_of': configlet.notifyUsers})
+
+            ## unsubscribe
+            #for principal in configlet.notifyUsers:
+            #    notification.unsubscribe(principal)
 
 
 @component.adapter(IDiscussible, IIntIdAddedEvent)
