@@ -22,7 +22,7 @@
             </h1>
           </td></tr>
         </tbody></table>
-        <div tal:condition="view/available" style="color:#ff0000;font-weight:bold">This comment is awaiting moderation.</div>
+        <div tal:condition="not: view/available" style="color:#ff0000;font-weight:bold">This comment is awaiting moderation.</div>
         <tal:block i18n:translate="">
             Comment:
         </tal:block>
