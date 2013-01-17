@@ -43,7 +43,6 @@ from zojax.content.discussion.interfaces import _, IComment, IContentDiscussion
 from zojax.content.discussion.utils import getVariablesForCookie, getAthorFromCookie
 
 
-
 def PostCommentKey(object, instance, *args, **kw):
     instance.updateForms()
     if not instance.postsAllowed or \
@@ -72,6 +71,7 @@ class PostCommentForm(PageletForm):
     @property
     def fields(self):
         fields = Fields(IComment)
+        fields['approved'].mode = HIDDEN_MODE
         fields['approved'].mode = HIDDEN_MODE
 
         if self.isPrincipal():
@@ -152,6 +152,8 @@ class PostComment(PageletForm):
     def fields(self):
         fields = Fields(IComment)
         fields['approved'].mode = HIDDEN_MODE
+        fields['social_type'].mode = HIDDEN_MODE
+        fields = fields.omit('social_avatar_url', 'social_name')
 
         if self.isPrincipal():
             fields = fields.omit('captcha', 'authorName')
@@ -235,3 +237,4 @@ class PostComment(PageletForm):
     @button.buttonAndHandler(_('Cancel'), name='cancel', provides=ICancelButton)
     def handleCancel(self, action):
         self.redirect('.')
+

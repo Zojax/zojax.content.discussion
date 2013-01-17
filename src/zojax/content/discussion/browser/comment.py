@@ -28,6 +28,7 @@ from zojax.content.discussion.interfaces import IContentDiscussion
 class CommentView(object):
 
     avatar = None
+    social_avatar = None
     author = u'Anonymous'
     url = ''
 
@@ -52,6 +53,8 @@ class CommentView(object):
         if author is not None or author == u'Unauthenticated User':
             if getattr(self.context, 'authorName'):
                 self.author = self.context.authorName
+                if 'social_avatar_url' in dir(self.context) and self.context.social_type:
+                    self.social_avatar = self.context.social_avatar_url
 
         self.comment = self.context.comment
 

@@ -24,18 +24,19 @@ from zope.security import checkPermission
 from zope.schema.fieldproperty import FieldProperty
 from zope.traversing.browser import absoluteURL
 from zope.app.container.interfaces import IObjectRemovedEvent
+from zope.component import getUtility
 
 from zojax.catalog.utils import getRequest
 from zojax.ownership.interfaces import IOwnership
 from zojax.security.utils import getPrincipal
 
-from interfaces import ISimpleComment, IThreadedComment, IContentDiscussion
+from interfaces import ISimpleComment, IThreadedComment, IContentDiscussion, IContentDiscussionConfig, ISocialComment
 
 from utils import getAthorFromCookie
 
 
 class Comment(Persistent, Location):
-    interface.implements(ISimpleComment, IThreadedComment)
+    interface.implements(ISimpleComment, IThreadedComment, ISocialComment)
 
     date = None
     anonymous = False
@@ -46,9 +47,12 @@ class Comment(Persistent, Location):
     authorName = FieldProperty(ISimpleComment['authorName'])
     approved = FieldProperty(ISimpleComment['approved'])
 
-    def __init__(self, author, comment):
+
+    def __init__(self, author, comment, social_type=None, social_name=None):
         self.comment = comment
         self.author = author
+        self.social_type = social_type
+        self.social_name = social_name
 
     @property
     def content(self):

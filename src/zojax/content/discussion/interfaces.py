@@ -79,6 +79,13 @@ class IThreadedComment(interface.Interface):
     children = interface.Attribute('List of children comments')
 
 
+class ISocialComment(IComment):
+    """ twitter/fb comment """
+    social_name = schema.TextLine(title = _(u'Social name'))
+    social_avatar_url = schema.TextLine(title = _(u'Social avatar url'))
+    social_type = schema.Int(title = _(u'Social type (1 - twitter, 2 - facebook)'))
+
+
 class IContentDiscussion(interface.Interface):
     """Content discussion extension"""
 
@@ -188,6 +195,12 @@ class IContentDiscussionConfig(interface.Interface):
         default = 1,
         required = True)
 
-
 class IContentDiscussionConfiglet(IContentDiscussionConfig):
     """ configlet """
+    fb_avatar_url = schema.TextLine(
+        title = _(u'Facebook Avatar URL'),
+        required = True)
+
+    tw_avatar_url = schema.TextLine(
+        title = _(u'Twitter Avatar URL'),
+        required = True)
