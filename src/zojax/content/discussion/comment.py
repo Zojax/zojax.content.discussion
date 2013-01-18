@@ -110,11 +110,14 @@ class Comment(Persistent, Location):
 
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
-
-                cookieAuthor = getAthorFromCookie(getRequest())
+                request = getRequest()
+                cookieAuthor = getAthorFromCookie(request)
                 if cookieAuthor == self.authorName:
                     return True
-
+                if 'social_type' in dir(self) and self.social_type:
+                    if 'fb_author' in request.keys() and self.authorName == request['fb_author'] or\
+                       'screen_name' in request.keys() and self.authorName == request['screen_name']:
+                        return True
                 return self.approved
 
         return True
