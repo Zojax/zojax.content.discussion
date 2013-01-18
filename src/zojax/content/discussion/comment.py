@@ -16,6 +16,7 @@ from zojax.content.discussion.interfaces import IComment
 
 $Id$
 """
+import urllib
 from zope import interface, component
 from persistent import Persistent
 from zope.location import Location
@@ -110,12 +111,12 @@ class Comment(Persistent, Location):
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
                 request = getRequest()
-                cookieAuthor = getAthorFromCookie(request)
+		cookieAuthor = getAthorFromCookie(request)
                 if cookieAuthor == self.authorName:
                     return True
-                if 'social_type' in dir(self) and self.social_type:
-                    if 'fb_author' in request.keys() and self.authorName == request['fb_author'] or\
-                       'screen_name' in request.keys() and self.authorName == request['screen_name']:
+		if 'social_type' in dir(self) and self.social_type:
+		    if 'fb_author' in request.keys() and self.authorName == urllib.unquote(request['fb_author']) or\
+                       'screen_name' in request.keys() and self.authorName == urllib.unquote(request['screen_name']):
                         return True
                 return self.approved
 
