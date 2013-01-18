@@ -107,7 +107,6 @@ class Comment(Persistent, Location):
         """ visible with the approval
         """
         content = self.content
-
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
                 request = getRequest()

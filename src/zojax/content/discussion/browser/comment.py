@@ -29,6 +29,7 @@ class CommentView(object):
 
     avatar = None
     social_avatar = None
+    social_name = None
     author = u'Anonymous'
     url = ''
 
@@ -55,6 +56,10 @@ class CommentView(object):
                 self.author = self.context.authorName
                 if 'social_avatar_url' in dir(self.context) and self.context.social_type:
                     self.social_avatar = self.context.social_avatar_url
+                    if self.context.social_type==1:
+                        self.social_name = 'Twitter'
+                    elif self.context.social_type==2:
+                        self.social_name = 'Facebook'
 
         self.comment = self.context.comment
 
