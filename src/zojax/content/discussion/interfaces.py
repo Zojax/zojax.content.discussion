@@ -84,7 +84,7 @@ class ISocialComment(IComment):
     social_name = schema.TextLine(title = _(u'Social name'))
     social_avatar_url = schema.TextLine(title = _(u'Social avatar url'))
     facebook_id = schema.TextLine(title = _(u'Facebook id for avatar retrieving'), required = False)
-    social_type = schema.Int(title = _(u'Social type (1 - twitter, 2 - facebook)'))
+    social_type = schema.Int(title = _(u'Social type (1 - twitter, 2 - facebook)'), required = False)
 
 
 class IContentDiscussion(interface.Interface):
