@@ -116,7 +116,8 @@ class Comment(Persistent, Location):
                     return True
 		if 'social_type' in dir(self) and self.social_type:
 		    if 'fb_author' in request.keys() and self.authorName == urllib.unquote(request['fb_author']) or\
-                       'screen_name' in request.keys() and self.authorName == urllib.unquote(request['screen_name']):
+             'tw_name' in request.keys() and self.authorName == urllib.unquote(request['tw_name']) or\
+             'screen_name' in request.keys() and self.authorName == urllib.unquote(request['screen_name']):
                         return True
                 return self.approved
 
