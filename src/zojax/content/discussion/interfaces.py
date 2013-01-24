@@ -87,7 +87,7 @@ class IContentDiscussion(interface.Interface):
     status = RadioChoice(
         title = _(u'Content discussion'),
         description = _('Select comment policy for this item.'),
-        vocabulary = commentPolicyVocabulary,
+        vocabulary = 'zojax.content.discussion.comment-policy',
         default = 3,
         required = True)
 
