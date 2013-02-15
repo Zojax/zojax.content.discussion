@@ -73,7 +73,6 @@ class PostCommentForm(PageletForm):
         fields = Fields(IComment)
         fields['approved'].mode = HIDDEN_MODE
         fields['approved'].mode = HIDDEN_MODE
-
         if self.isPrincipal():
             fields = fields.omit('captcha', 'authorName')
 

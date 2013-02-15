@@ -83,6 +83,7 @@ class ISocialComment(IComment):
     """ twitter/fb comment """
     social_name = schema.TextLine(title = _(u'Social name'))
     social_avatar_url = schema.TextLine(title = _(u'Social avatar url'))
+    twitter_id = schema.TextLine(title = _(u'Twitter id for avatar retrieving'), required = False)
     facebook_id = schema.TextLine(title = _(u'Facebook id for avatar retrieving'), required = False)
     social_type = schema.Int(title = _(u'Social type (1 - twitter, 2 - facebook)'), required = False)
 
