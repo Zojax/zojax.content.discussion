@@ -54,6 +54,10 @@ commentsOrderVocabulary = SimpleVocabulary(
     [SimpleTerm(1, 'direct', _('Direct order')),
      SimpleTerm(2, 'reversed', _('Reverse order'))])
 
+commentsReceiversVocabulary = SimpleVocabulary(
+    [SimpleTerm(1, 'all', _('Default Users')),
+     SimpleTerm(2, 'subscribedUsers', _('Only Users for unapproved notification'))])
+
 
 class PortletTypesVocabulary(object):
     interface.implements(IVocabularyFactory)

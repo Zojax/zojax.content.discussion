@@ -53,9 +53,10 @@ def commentAdded(comment, ev):
         return
 
     notification = getAdapter(comment.content, ICommentsNotification, 'comments')
+    configlet = getUtility(IContentDiscussionConfig)
 
-    if comment.isAvailable():
-        # check subscribe
+    if comment.isAvailable() and configlet.notificationsReceivers == 1:
+        # check subscribe for current user
         try:
             if not notification.isSubscribedInParents():
                 notification.subscribe()
@@ -65,7 +66,6 @@ def commentAdded(comment, ev):
         # send notification
         sendNotification('comments', comment.content, comment)
     else:
-        configlet = getUtility(IContentDiscussionConfig)
         if configlet.notifyUsers:
             # subscribe
             for principal in configlet.notifyUsers:

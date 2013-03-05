@@ -24,8 +24,7 @@ from zojax.widget.captcha.field import Captcha
 from zojax.widget.radio.field import RadioChoice
 from zojax.content.feeds.interfaces import IRSS2Feed
 from zojax.content.discussion.vocabulary import commentPolicyVocabulary, \
-                                                postCommentPositionVocabulary, \
-                                                commentsOrderVocabulary
+    postCommentPositionVocabulary, commentsOrderVocabulary, commentsReceiversVocabulary
 from zojax.content.notifications.interfaces import IContentNotification
 
 _ = MessageFactory('zojax.content.discussion')
@@ -187,6 +186,13 @@ class IContentDiscussionConfig(interface.Interface):
         title = _(u'Comments order'),
         description = _('Select order in which to dispay comments.'),
         vocabulary = commentsOrderVocabulary,
+        default = 1,
+        required = True)
+
+    notificationsReceivers = RadioChoice(
+        title = _(u'Notifications Receivers'),
+        description = _('Select who will receive notifications on new comments.'),
+        vocabulary = commentsReceiversVocabulary,
         default = 1,
         required = True)
 
