@@ -1,17 +1,56 @@
-<h4 i18n:translate=""><tal:block i18n:name="author" content="view/author"/> replied to
-  <a i18n:name="url" tal:attributes="href view/url"
-     tal:content="view/content/title|view/content/__name__"></a></h4>
-<br />
-<tal:block i18n:translate="">
-Comment:
-</tal:block>
-<div tal:content="structure view/comment/comment"></div>
-<br />
-<hr />
-<a tal:attributes="href string:${view/url}#comments" i18n:translate="">View comments</a>
-<br />
-<div i18n:translate="">
-Use your profile settings if you would like to stop receiving updates on <a tal:attributes="href view/url"
- i18n:name="title"
- tal:content="view/content/title|view/content/__name__"></a>
-</div>
+<tal:email tal:define="site modules/zope.app.component.hooks/getSite">
+
+<table width="100%" cellspacing="0" cellpadding="0" border="0"><tbody>
+  <tr><td style="background-color:#f0efef;padding:30px 15px 0">
+    <table align="center" width="710" cellspacing="0" cellpadding="0" border="0"
+           style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;color:#333"><tbody>
+      <tr style="background-color:#63839b">
+        <td height="70" style="padding-left:10px">
+          <a target="_blank" href="#" style="color:#ffffff;display:block;font-size:28px;text-decoration:none;font-weight:bold"
+             tal:attributes="href string:${site/@@absolute_url}/">
+             <tal:block replace="view/portal_title">Portal Title</tal:block>
+          </a>
+      </td></tr>
+      <tr><td style="background-color:#fff;padding:25px 40px 22px;border-radius:0 0 7px 7px">
+        <table align="center" width="600" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto"><tbody>
+          <tr><td width="540" valign="middle" height="36" style="padding:0 0 25px">
+            <h1 style="font-weight:normal;font-size:19px;line-height:1.2;margin:0" i18n:translate="">
+              <strong tal:content="view/author" i18n:name="author">Author</strong>
+              replied to
+              "<a target="_blank" style="color:#5a7b93;text-decoration:none" href="#"
+                  tal:attributes="href view/url" tal:content="view/content/title|view/content/__name__" i18n:name="url"></a>".
+            </h1>
+          </td></tr>
+        </tbody></table>
+        <div tal:condition="not: view/available" style="color:#ff0000;font-weight:bold">This comment is awaiting moderation.</div>
+        <tal:block i18n:translate="">
+            Comment:
+        </tal:block>
+        <div tal:content="structure view/comment/comment">Comment</div>
+        <br />
+        <hr />
+        <a href="#" tal:attributes="href string:${view/url}#comments" i18n:translate="">View comments</a>
+        <br />
+        <div i18n:translate="">
+        Use your profile settings if you would like to stop receiving updates on <a tal:attributes="href view/url"
+         i18n:name="title" href="#"
+         tal:content="view/content/title|view/content/__name__">title</a>
+        </div>
+
+      </td></tr>
+      <tr><td>
+      <div style="padding:0 5px">
+        <div style="min-height:2px;line-height:2px;font-size:2px;background-color:#e2e7e7;clear:both;border-bottom-right-radius:5px;border-bottom-left-radius:5px"></div>
+      </div>
+      </td></tr>
+      <tr><td style="font-size:11px;line-height:16px;color:#aaa;padding:25px 40px">
+          <div style="font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;margin-top:5px;font-size:11px;color:#666666" i18n:translate="">
+            Please do not reply to this message, it was sent automatically. This is a service message, which is associated with your account on the <a target="_blank" style="color:#6d90a9;text-decoration:none" href="#" tal:attributes="href string:${site/@@absolute_url}/" tal:content="view/portal_title">Portal Title</a>.
+          </div>
+        </td>
+      </tr>
+    </tbody></table>
+  </td></tr>
+</tbody></table>
+
+</tal:email>

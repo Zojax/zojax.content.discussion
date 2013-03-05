@@ -18,12 +18,15 @@ $Id$
 from email.Utils import formataddr
 
 from zope import interface, component
-from zope.component import getUtility, queryMultiAdapter, getAdapter
-from zope.traversing.browser import absoluteURL
 from zope.app.intid.interfaces import IIntIds
+from zope.app.component.hooks import getSite
+from zope.component import getUtility, queryMultiAdapter, getMultiAdapter
+from zope.traversing.browser import absoluteURL
 
-from zojax.mail.interfaces import IMailer
+from z3c.breadcrumb.interfaces import IBreadcrumb
+
 from zojax.content.type.interfaces import IContentViewView
+from zojax.mail.interfaces import IMailer
 from zojax.principal.profile.interfaces import IPersonalProfile
 
 from zojax.content.discussion.interfaces import ICommentsNotification
@@ -65,6 +68,8 @@ class CommentNotificationMail(object):
             self.url = '%s/'%absoluteURL(content, request)
 
         self.content = comment.content
+        self.portal_title = getMultiAdapter((getSite(), request), IBreadcrumb).name
+        self.available = comment.isAvailable()
 
     @property
     def subject(self):

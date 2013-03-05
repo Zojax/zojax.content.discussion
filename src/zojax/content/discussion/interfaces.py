@@ -18,12 +18,13 @@ $Id$
 from zope import interface, schema
 from zope.i18nmessageid import MessageFactory
 from zope.component.interfaces import IObjectEvent, ObjectEvent
+
+from zojax.principal.field import UserField
 from zojax.widget.captcha.field import Captcha
 from zojax.widget.radio.field import RadioChoice
 from zojax.content.feeds.interfaces import IRSS2Feed
 from zojax.content.discussion.vocabulary import commentPolicyVocabulary, \
-                                                postCommentPositionVocabulary, \
-                                                commentsOrderVocabulary
+    postCommentPositionVocabulary, commentsOrderVocabulary, commentsReceiversVocabulary
 from zojax.content.notifications.interfaces import IContentNotification
 
 _ = MessageFactory('zojax.content.discussion')
@@ -94,7 +95,7 @@ class IContentDiscussion(interface.Interface):
     status = RadioChoice(
         title = _(u'Content discussion'),
         description = _('Select comment policy for this item.'),
-        vocabulary = commentPolicyVocabulary,
+        vocabulary = 'zojax.content.discussion.comment-policy',
         default = 3,
         required = True)
 
@@ -196,6 +197,22 @@ class IContentDiscussionConfig(interface.Interface):
         vocabulary = commentsOrderVocabulary,
         default = 1,
         required = True)
+
+    notificationsReceivers = RadioChoice(
+        title = _(u'Notifications Receivers'),
+        description = _('Select who will receive notifications on new comments.'),
+        vocabulary = commentsReceiversVocabulary,
+        default = 1,
+        required = True)
+
+    notifyUsers =  schema.Tuple(
+        title = _(u'Users for unapproved notifications'),
+        description = _(u'These users will receive notifications '
+                        u'about unapproved comments.'),
+        value_type = UserField(),
+        required = False,
+        default = ())
+
 
 class IContentDiscussionConfiglet(IContentDiscussionConfig):
     """ configlet """

@@ -79,7 +79,7 @@ class NotApprovedCommentsView(WizardStep):
                 IStatusMessage(request).add(_('Selected comments have been approved.'))
 
         catalog = getCatalog()
-        self.results = catalog.searchResults(approved={'any_of': (False,)})
+        self.results = catalog.search(approved=(False,))
 
         # TODO: return all unapproved comments with Batch help
         #self.batch = Batch(results, size=20, context=context, request=request)

@@ -26,21 +26,25 @@ from zojax.content.type.interfaces import IPortalType
 
 _ = MessageFactory('zojax.content.discussion')
 
+def commentPolicyVocabulary(context):
+    """ returns Policy for discussion
+    """
+    vocab = SimpleVocabulary([
+        SimpleTerm(1, 'open', 'Open'),
+        SimpleTerm(4, 'approval', 'Open with approval'),
+        SimpleTerm(2, 'closed', 'Closed'),
+        SimpleTerm(3, 'disabled', 'Disabled')])
 
-commentPolicyVocabulary = SimpleVocabulary(
-    [SimpleTerm(1, 'open', 'Open'),
-     SimpleTerm(4, 'approval', 'Open with approval'),
-     SimpleTerm(2, 'closed', 'Closed'),
-     SimpleTerm(3, 'disabled', 'Disabled')])
+    vocab.getTerm(1).description = _(
+        'Comments are allowed.')
+    vocab.getTerm(2).description = _(
+        'Existing comments will be displayed, new comments are not allowed.')
+    vocab.getTerm(3).description = _(
+        'Comments will not be displayed, new comments are not allowed.')
+    vocab.getTerm(4).description = _(
+        'Comments are allowed but require approval for non auth users.')
 
-commentPolicyVocabulary.getTerm(1).description = _(
-    'Comments are allowed.')
-commentPolicyVocabulary.getTerm(2).description = _(
-    'Existing comments will be displayed, new comments are not allowed.')
-commentPolicyVocabulary.getTerm(3).description = _(
-    'Comments will not be displayed, new comments are not allowed.')
-commentPolicyVocabulary.getTerm(4).description = _(
-    'Comments are allowed but require approval for non auth users.')
+    return vocab
 
 postCommentPositionVocabulary = SimpleVocabulary(
     [SimpleTerm(1, 'under', _('Under comments')),
@@ -49,6 +53,10 @@ postCommentPositionVocabulary = SimpleVocabulary(
 commentsOrderVocabulary = SimpleVocabulary(
     [SimpleTerm(1, 'direct', _('Direct order')),
      SimpleTerm(2, 'reversed', _('Reverse order'))])
+
+commentsReceiversVocabulary = SimpleVocabulary(
+    [SimpleTerm(1, 'all', _('Default Users')),
+     SimpleTerm(2, 'subscribedUsers', _('Only Users for unapproved notification'))])
 
 
 class PortletTypesVocabulary(object):

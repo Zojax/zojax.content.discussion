@@ -127,6 +127,11 @@
      name="zojax.content.discussion.portlet-portaltypes"
      factory=".vocabulary.PortletTypesVocabulary" />
 
+  <utility
+     name="zojax.content.discussion.comment-policy"
+     component=".vocabulary.commentPolicyVocabulary"
+     provides="zope.schema.interfaces.IVocabularyFactory" />
+
   <!-- catalog -->
   <include file="catalog.zcml" />
 
