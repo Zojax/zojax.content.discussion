@@ -12,6 +12,8 @@
 #
 ##############################################################################
 from zojax.content.discussion.interfaces import IComment
+
+
 """
 
 $Id$
@@ -65,7 +67,7 @@ class Comment(Persistent, Location):
 
     @property
     def url(self):
-        url="%s/@@managediscussion/%s/context.html"
+        url = "%s/@@managediscussion/%s/context.html"
         return url % (absoluteURL(self.content, getRequest()), self.id)
 
     def addChild(self, comment):
@@ -111,13 +113,14 @@ class Comment(Persistent, Location):
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
                 request = getRequest()
-		cookieAuthor = getAthorFromCookie(request)
+                cookieAuthor = getAthorFromCookie(request)
                 if cookieAuthor == self.authorName:
                     return True
-		if 'social_type' in dir(self) and self.social_type:
-		    if 'fb_author' in request.keys() and self.authorName == urllib.unquote(request['fb_author']) or\
-             'tw_name' in request.keys() and self.authorName == urllib.unquote(request['tw_name']) or\
-             'screen_name' in request.keys() and self.authorName == urllib.unquote(request['screen_name']):
+                if 'social_type' in dir(self) and self.social_type:
+
+                    if getattr(self, 'facebook_id', '') == request.cookies.get('facebook_id') or \
+                            self.authorName == urllib.unquote(getattr(request, 'tw_name', '')) or   \
+                            self.authorName == urllib.unquote(getattr(request, 'screen_name', '')):
                         return True
                 return self.approved
 
@@ -125,7 +128,6 @@ class Comment(Persistent, Location):
 
 
 class CommentOwnership(object):
-
     component.adapts(IComment)
     interface.implements(IOwnership)
 
