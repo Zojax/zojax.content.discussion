@@ -117,10 +117,9 @@ class Comment(Persistent, Location):
                 if cookieAuthor == self.authorName:
                     return True
                 if 'social_type' in dir(self) and self.social_type:
-
-                    if getattr(self, 'facebook_id', '') == request.cookies.get('facebook_id') or \
-                            self.authorName == urllib.unquote(getattr(request, 'tw_name', '')) or   \
-                            self.authorName == urllib.unquote(getattr(request, 'screen_name', '')):
+                    if getattr(self, 'facebook_id', '') == request.get('facebook_id', None) or \
+                                    self.authorName == request.get('screen_name'):
+                                    # self.authorName == urllib.unquote(getattr(request, 'screen_name', '')):
                         return True
                 return self.approved
 
