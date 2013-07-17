@@ -80,7 +80,7 @@ class PostCommentForm(PageletForm):
 
     def updateWidgets(self):
         super(PostCommentForm, self).updateWidgets()
-        if not self.isPrincipal():
+        if not self.isPrincipal() and getAthorFromCookie(self.request):
             # NOTE: get name from cookie
             self.widgets['authorName'].value = getAthorFromCookie(self.request)
 
