@@ -15,6 +15,7 @@
 
 $Id$
 """
+from zojax.cache.timekey import TagTimeKey, each2minutes
 from zope.traversing.api import getPath
 from zope.size.interfaces import ISized
 from zope.security import checkPermission
@@ -47,7 +48,7 @@ class Comments(object):
 
         level = 0
         comments = []
-
+        # import pdb; pdb.set_trace()
         if self.config.commentsOrder == 1:
             values = lambda x: x
         else:
@@ -74,7 +75,7 @@ class Comments(object):
 
         self.comments = comments
 
-    @cache('content.discussion', Modified, CommentsTag)
+    @cache('content.discussion', Modified, CommentsTag, TagTimeKey(CommentsTag, each2minutes))
     def updateAndRender(self):
         return super(Comments, self).updateAndRender()
 
