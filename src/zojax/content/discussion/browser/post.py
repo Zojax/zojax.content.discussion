@@ -137,7 +137,7 @@ class PostCommentForm(PageletForm):
 
         return bool(principal)
 
-    @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
+    # @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
     def updateAndRender(self):
         return super(PostCommentForm, self).updateAndRender()
 

@@ -95,7 +95,7 @@ class RecentCommentsPortlet(object):
     def isAvailable(self):
         return bool(self.comments)
 
-    @cache('portlet.recentcomments',
-           TagTimeKey(CommentsTag, each10minutes), VisibleContext)
+    # @cache('portlet.recentcomments',
+    #        TagTimeKey(CommentsTag, each10minutes), VisibleContext)
     def updateAndRender(self):
         return super(RecentCommentsPortlet, self).updateAndRender()
