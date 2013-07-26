@@ -108,12 +108,13 @@ class Comment(Persistent, Location):
             if not checkPermission('zojax.ModifyContent', content):
 
                 cookieAuthor = getAthorFromCookie(getRequest())
-                print '============================================'
-                print 'author name:', self.authorName
-                print 'author from cookie:', getAthorFromCookie(getRequest())
-                print 'check:', cookieAuthor == self.authorName
-                print '============================================'
                 if cookieAuthor == self.authorName:
+                    print '============================================'
+                    print 'author name:', self.authorName
+                    print 'author from cookie:', getAthorFromCookie(getRequest())
+                    print 'check:', cookieAuthor == self.authorName
+                    print 'comment:', self.comment
+                    print '============================================'
                     return True
                 return self.approved
 
