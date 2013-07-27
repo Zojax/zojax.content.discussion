@@ -46,11 +46,11 @@ from zojax.content.discussion.utils import getVariablesForCookie, getAthorFromCo
 
 def PostCommentKey(object, instance, *args, **kw):
     instance.updateForms()
-    if not instance.postsAllowed or \
-            instance.request.has_key('discussion.buttons.post') or \
-            (len(instance.forms) or len(instance.subforms)):
-        raise DoNotCache()
-    return ()
+    # import pdb; pdb.set_trace()
+    # print "DoNotCache()", not instance.postsAllowed or instance.request.has_key('discussion.buttons.post') or (len(instance.forms) or len(instance.subforms))
+    # if not instance.postsAllowed or instance.request.has_key('discussion.buttons.post') or (len(instance.forms) or len(instance.subforms)):
+    raise DoNotCache()
+    # return ()
 
 
 class PostCommentForm(PageletForm):
@@ -101,7 +101,6 @@ class PostCommentForm(PageletForm):
             comment = Comment(request.principal.id, commentText)
             comment.date = datetime.now(ITZInfo(request, pytz.utc))
 
-            comment = discussion.add(comment)
 
             if 'authorName' in data:
                 comment.authorName = data['authorName']
@@ -120,11 +119,12 @@ class PostCommentForm(PageletForm):
                 comment.approved = True
                 msg = _('Comment has been added.')
 
+            comment = discussion.add(comment)
+
             # NOTE: send modified event for original or new object
             notify(ObjectModifiedEvent(comment))
-
             IStatusMessage(request).add(msg)
-            # self.redirect('%s#comments'%request.getURL())
+            self.redirect('%s#comments'%request.getURL())
 
     def isAvailable(self):
         return self.postsAllowed
@@ -137,9 +137,9 @@ class PostCommentForm(PageletForm):
 
         return bool(principal)
 
-    @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
-    def updateAndRender(self):
-        return super(PostCommentForm, self).updateAndRender()
+    # @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
+    # def updateAndRender(self):
+    #     return super(PostCommentForm, self).updateAndRender()
 
 
 class PostComment(PageletForm):
