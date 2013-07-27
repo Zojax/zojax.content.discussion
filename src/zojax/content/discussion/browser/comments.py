@@ -74,7 +74,7 @@ class Comments(object):
 
         self.comments = comments
 
-    # @cache('content.discussion', Modified, CommentsTag)
+    @cache('content.discussion', Modified, CommentsTag)
     def updateAndRender(self):
         return super(Comments, self).updateAndRender()
 

@@ -124,7 +124,7 @@ class PostCommentForm(PageletForm):
             notify(ObjectModifiedEvent(comment))
 
             IStatusMessage(request).add(msg)
-            self.redirect('%s#comments'%request.getURL())
+            # self.redirect('%s#comments'%request.getURL())
 
     def isAvailable(self):
         return self.postsAllowed
@@ -137,7 +137,7 @@ class PostCommentForm(PageletForm):
 
         return bool(principal)
 
-    # @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
+    @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
     def updateAndRender(self):
         return super(PostCommentForm, self).updateAndRender()
 
@@ -222,7 +222,7 @@ class PostComment(PageletForm):
             notify(ObjectModifiedEvent(comment))
 
             IStatusMessage(request).add(msg)
-            self.redirect('%s#comments'%request.getURL())
+            # self.redirect('%s#comments'%request.getURL())
 
     def isPrincipal(self):
         try:
