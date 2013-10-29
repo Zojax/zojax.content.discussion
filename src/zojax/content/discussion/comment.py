@@ -110,10 +110,22 @@ class Comment(Persistent, Location):
         """ visible with the approval
         """
         content = self.content
+        request = getRequest()
+        cookieAuthor = getAthorFromCookie(request)
+
+        print 'IContentDiscussion(content).status: ', IContentDiscussion(content).status
+        print 'self.authorName: ', self.authorName
+        print 'cookieAuthor: ', cookieAuthor
+        print 'self.social_type: ', self.social_type
+        print 'self.approved: ', self.approved
+        print "getattr(self, 'facebook_id', ''): ", getattr(self, 'facebook_id', '')
+        print "request.get('facebook_id', None): ", request.get('facebook_id', None)
+        print "request.get('screen_name'): ", request.get('screen_name')
+
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
-                request = getRequest()
-                cookieAuthor = getAthorFromCookie(request)
+                #request = getRequest()
+                #cookieAuthor = getAthorFromCookie(request)
                 if cookieAuthor == self.authorName:
                     return True
                 if 'social_type' in dir(self) and self.social_type:
