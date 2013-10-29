@@ -116,11 +116,13 @@ class Comment(Persistent, Location):
                 cookieAuthor = getAthorFromCookie(request)
                 if cookieAuthor == self.authorName:
                     return True
-                if 'social_type' in dir(self) and self.social_type:
-                    if getattr(self, 'facebook_id', '') == request.get('facebook_id', None) or \
-                                    self.authorName == request.get('screen_name'):
-                                    # self.authorName == urllib.unquote(getattr(request, 'screen_name', '')):
+                if getattr(self, 'social_type', False):
+                    facebook_id = request.get('facebook_id', None)
+                    if self.authorName == request.get('screen_name'):
                         return True
+                    if facebook_id is not None:
+                        if getattr(self, 'facebook_id', '') == facebook_id:
+                            return True
                 return self.approved
 
         return True
