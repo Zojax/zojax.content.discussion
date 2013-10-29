@@ -40,11 +40,11 @@ def getAthorFromCookie(request=None):
     """ returns Athor from cookie
     """
     if not request:
-        return None
+        return '___'
 
     cookie_name = getVariablesForCookie(request)['name']
 
     if request.has_key(cookie_name):
         return request[cookie_name]
 
-    return None
+    return '___'
