@@ -120,7 +120,7 @@ class Comment(Persistent, Location):
         """
         content = self.content
         user = self.getPrincipal()
-        if user is not None and self.author != 'zope.anybody':
+        if user is not None and user.id != 'zope.anybody':
             return self.author == user.id
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
