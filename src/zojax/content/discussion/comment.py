@@ -36,6 +36,7 @@ from zojax.security.utils import getPrincipal
 from interfaces import ISimpleComment, IThreadedComment, IContentDiscussion, IContentDiscussionConfig, ISocialComment
 
 from utils import getAthorFromCookie
+from zope.app.security.interfaces import IAuthentication
 
 
 class Comment(Persistent, Location):
@@ -106,10 +107,21 @@ class Comment(Persistent, Location):
             for child in self.children:
                 child.setParent(parent)
 
+    def getPrincipal(self):
+        request = getRequest()
+        try:
+            principal = getUtility(IAuthentication).authenticate(request)
+        except:
+            principal = None
+        return principal
+
     def isAvailable(self):
         """ visible with the approval
         """
         content = self.content
+        user = self.getPrincipal()
+        if user is not None and self.author != 'zope.anybody':
+            return self.author == user.id
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
                 request = getRequest()
