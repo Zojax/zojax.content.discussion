@@ -118,10 +118,12 @@ class Comment(Persistent, Location):
     def isAvailable(self):
         """ visible with the approval
         """
-        content = self.content
         user = self.getPrincipal()
         if user is not None and user.id != 'zope.anybody':
-            return self.author == user.id
+            if self.author == user.id:
+                return True
+
+        content = self.content
         if IContentDiscussion(content).status == 4:
             if not checkPermission('zojax.ModifyContent', content):
                 request = getRequest()
