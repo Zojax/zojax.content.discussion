@@ -151,7 +151,8 @@ class PostComment(PageletForm):
     def fields(self):
         fields = Fields(IComment)
         fields['approved'].mode = HIDDEN_MODE
-        fields['social_type'].mode = HIDDEN_MODE
+        if 'social_type' in fields:
+            fields['social_type'].mode = HIDDEN_MODE
         fields = fields.omit('social_avatar_url', 'social_name')
 
         if self.isPrincipal():
