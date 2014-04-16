@@ -2,6 +2,7 @@
    xmlns="http://namespaces.zope.org/zope"
    xmlns:zojax="http://namespaces.zope.org/zojax"
    xmlns:browser="http://namespaces.zope.org/browser"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
    i18n_domain="zojax.content.discussion">
 
   <zojax:pageelement
@@ -131,16 +132,18 @@
 
   <!-- styles -->
   <zojax:resourceinclude
-     name="zojax-content-discussion.css" library="zojax"
-     type="stylesheet" file="resources/styles.css" filetype="zrt" />
-
-  <!-- social api -->
-  <include file="socapi.zcml" />
+     name="zojax-content-discussion.css"
+     library="zojax"
+     type="stylesheet" filetype="zrt"
+     file="resources/styles.css" />
 
   <zojax:resourceinclude
      name="jquery-oauthpopup-js"
-     library="js-social-logins" type="javascript"
-     require="jquery"
-     file="resources/jquery.oauthpopup.js"/>
+     library="jquery-plugins" require="jquery"
+     type="javascript" compression="yes"
+     file="resources/jquery.oauthpopup.js" />
+
+  <!-- social api -->
+  <include file="socapi.zcml" />
 
 </configure>
