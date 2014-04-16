@@ -214,12 +214,54 @@ class IContentDiscussionConfig(interface.Interface):
         default = ())
 
 
-class IContentDiscussionConfiglet(IContentDiscussionConfig):
-    """ configlet """
-    fb_avatar_url = schema.TextLine(
-        title = _(u'Facebook Avatar URL'),
+class ITwitterCommentingConfig(interface.Interface):
+    """ social commenting """
+
+    isVisible = schema.Bool(
+        title = _('Enable Commenting via Twitter'),
+        default = False,
         required = True)
 
-    tw_avatar_url = schema.TextLine(
-        title = _(u'Twitter Avatar URL'),
+    avatarUrl = schema.TextLine(
+        title = _(u'Avatar URL'),
+        default = u"http://twitter.com/api/users/profile_image/",
         required = True)
+
+    apiKey = schema.TextLine(
+        title = _(u'API key'),
+        default = u"HSy2odxODt1WbXog40S9pQ", # TODO: register app for localhost
+        required = True)
+
+    apiSecret = schema.TextLine(
+        title = _(u'API secret'),
+        default = u"zaiT5iK3spvHxnSWmKp75G0x24DfF4k5BuDqouNzVFo", # TODO: same
+        required = True)
+
+
+class IFacebookCommentingConfig(interface.Interface):
+    """ social commenting """
+
+    isVisible = schema.Bool(
+        title = _('Enable Commenting via Facebook'),
+        default = False,
+        required = True)
+
+    avatarUrl = schema.TextLine(
+        title = _(u'Avatar URL'),
+        default = u"http://graph.facebook.com/",
+        required = True)
+
+    appID = schema.TextLine(
+        title = _(u'App ID'),
+        default = u"1400897446847096", # TODO: register app for localhost
+        required = True)
+
+    appSecret = schema.TextLine(
+        title = _(u'App Secret'),
+        default = u"ebfd869b0150da03def367aa0070e11f", # TODO: same
+        required = True)
+
+
+class IContentDiscussionConfiglet(IContentDiscussionConfig):
+    """ configlet """
+

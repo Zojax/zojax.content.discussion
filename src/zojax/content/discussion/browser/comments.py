@@ -18,21 +18,27 @@ $Id$
 from zope.traversing.api import getPath
 from zope.size.interfaces import ISized
 from zope.security import checkPermission
-from zope.component import getMultiAdapter
 
 from zojax.cache.view import cache
-from zojax.layout.interfaces import IPagelet
+from zojax.catalog.utils import getRequest
 from zojax.content.type.interfaces import IDraftedContent
 
 from zojax.content.discussion.cache import CommentsTag
 from zojax.content.discussion.interfaces import \
     IContentDiscussion, IThreadedComment, IContentDiscussionConfig
+from zojax.content.discussion.utils import getAthorFromCookie
+
+
+def CookieChanged(object, instance, *args, **kw):
+    return {'author_name': getAthorFromCookie(getRequest())}
 
 
 def Modified(object, instance, *args, **kw):
     return {'modified': instance.discussion.modified,
             'context': getPath(instance.context),
-            'allowPost': checkPermission('zojax.AddComment', instance.context)}
+            'allowPost': checkPermission('zojax.AddComment', instance.context),
+            'facebook_id': instance.request.get('facebook_id', ''),
+            'screen_name': instance.request.get('screen_name', '')}
 
 
 class Comments(object):
@@ -74,7 +80,7 @@ class Comments(object):
 
         self.comments = comments
 
-    @cache('content.discussion', Modified, CommentsTag)
+    @cache('content.discussion', CookieChanged, Modified, CommentsTag)
     def updateAndRender(self):
         return super(Comments, self).updateAndRender()
 

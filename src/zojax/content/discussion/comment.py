@@ -11,32 +11,29 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from zojax.content.discussion.interfaces import IComment
-
-
 """
 
 $Id$
 """
-import urllib
-from zope import interface, component
 from persistent import Persistent
+
+from zope import interface, component
+from zope.app.container.interfaces import IObjectRemovedEvent
+from zope.app.security.interfaces import IAuthentication
+from zope.component import getUtility
 from zope.location import Location
 from zope.proxy import removeAllProxies
 from zope.security import checkPermission
 from zope.schema.fieldproperty import FieldProperty
 from zope.traversing.browser import absoluteURL
-from zope.app.container.interfaces import IObjectRemovedEvent
-from zope.component import getUtility
 
 from zojax.catalog.utils import getRequest
 from zojax.ownership.interfaces import IOwnership
 from zojax.security.utils import getPrincipal
 
-from interfaces import ISimpleComment, IThreadedComment, IContentDiscussion, IContentDiscussionConfig, ISocialComment
-
+from interfaces import IComment, ISimpleComment, IThreadedComment, \
+    IContentDiscussion, ISocialComment
 from utils import getAthorFromCookie
-from zope.app.security.interfaces import IAuthentication
 
 
 class Comment(Persistent, Location):
@@ -128,15 +125,19 @@ class Comment(Persistent, Location):
             if not checkPermission('zojax.ModifyContent', content):
                 request = getRequest()
                 cookieAuthor = getAthorFromCookie(request)
+
                 if cookieAuthor == self.authorName:
                     return True
+
                 if getattr(self, 'social_type', False):
-                    facebook_id = request.get('facebook_id', None)
-                    if self.authorName == request.get('screen_name'):
+                    facebook_id = request.get('facebook_id', 'emptyid')
+                    twitter_id = request.get('screen_name', 'emptyid')
+
+                    if getattr(self, 'twitter_id', '') == twitter_id:
                         return True
-                    if facebook_id is not None:
-                        if getattr(self, 'facebook_id', '') == facebook_id:
-                            return True
+                    if getattr(self, 'facebook_id', '') == facebook_id:
+                        return True
+
                 return self.approved
 
         return True

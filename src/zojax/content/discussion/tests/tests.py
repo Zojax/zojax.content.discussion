@@ -115,4 +115,6 @@ class IDefaultSkin(ILayoutFormLayer, Rotterdam):
 def test_suite():
     return unittest.TestSuite((
             FunctionalDocFileSuite("testbrowser.txt"),
+            FunctionalDocFileSuite("twitter.txt"),
+            FunctionalDocFileSuite("facebook.txt"),
             ))

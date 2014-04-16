@@ -1,3 +1,0 @@
-<a name="postComment"></a>
-<tal:block content="structure view/@@pagelet/form.view" />
-

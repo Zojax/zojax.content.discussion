@@ -7,7 +7,7 @@
     <table class="z-table not-approved-configlet">
       <thead>
         <tr>
-          <th><!--input type="checkbox" name="form.checkbox.all_ids" /--></th>
+          <th><input type="checkbox" name="form.checkbox.all_ids" /></th>
           <th>Comment</th>
           <th>Author</th>
           <th>Date</th>
@@ -50,4 +50,10 @@
         All comments approved.
     </div>
 
-</div>
+</div><script type="text/javascript">
+$(document).ready(function() {
+    $('input[name="form.checkbox.all_ids"]').click(function(){
+        $('input[name="form.checkbox.id:list"]').attr('checked', $(this).attr('checked'));
+    })
+})
+</script>

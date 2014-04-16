@@ -7,7 +7,7 @@
   <zojax:pageelement
      name="content.discussion"
      for="..interfaces.IContentDiscussionAware"
-     template="commentselement.pt"
+     template="templates/commentselement.pt"
      class=".comments.CommentsPageElement"
      manager="zojax.content.browser.interfaces.IContentBottom"
      weight="9999" />
@@ -16,14 +16,14 @@
      type="pagelet"
      name="content.discussion"
      for="..interfaces.IContentDiscussionAware"
-     template="comments.pt"
+     template="templates/comments.pt"
      class=".comments.Comments" />
 
   <zojax:pagelet
      type="pagelet"
      name="content.discussion.reply"
      for="..interfaces.IContentDiscussionAware"
-     template="commentadd.pt"
+     template="templates/commentadd.pt"
      class=".post.PostCommentForm" />
 
   <zojax:pagelet
@@ -35,12 +35,12 @@
   <zojax:pagelet
      type="form.viewspaceInfo"
      for=".post.PostComment"
-     template="commentreply.pt" />
+     template="templates/commentreply.pt" />
 
   <zojax:pagelet
      type="pagelet"
      for="..interfaces.IComment"
-     template="comment.pt"
+     template="templates/comment.pt"
      class=".comment.CommentView"
      permission="zope.Public" />
 
@@ -58,19 +58,19 @@
      type="pagelet"
      for="..interfaces.IDiscussible
           .edit.ContentDiscussonEdit * zojax.widget.radio.interfaces.ITermItem"
-     template="edititem.pt" />
+     template="templates/edititem.pt" />
 
   <zojax:pagelet
      name="approval"
      type="pagelet"
      for="..interfaces.IDiscussible
           .edit.ContentDiscussonEdit * zojax.widget.radio.interfaces.ITermItem"
-     template="edititem.pt" />
+     template="templates/edititem.pt" />
 
   <!-- recent comments portlet view -->
   <zojax:pagelet
      type="portlet.view"
-     template="recentcomments.pt"
+     template="templates/recentcomments.pt"
      for="..interfaces.IRecentCommentsPortlet" />
 
   <!-- managediscussion -->
@@ -88,7 +88,7 @@
   <zojax:pagelet
      name="delete.html"
      for="zojax.content.discussion.interfaces.IComment"
-     template="delete.pt"
+     template="templates/delete.pt"
      class=".delete.DeleteContent"
      permission="zojax.DeleteContent" />
 
@@ -113,25 +113,34 @@
   <zojax:pagelet
      type="form.viewspaceInfo"
      for=".manage.ManageDiscussion"
-     template="manage.pt" />
+     template="templates/manage.pt" />
 
   <!-- notification email -->
   <zojax:mailtemplate
      for="* ..interfaces.ISimpleComment"
      contentType="text/html"
-     template="template.pt"
+     template="templates/template.pt"
      class=".template.CommentNotificationMail"
      provides="zojax.content.notifications.interfaces.INotificationMailTemplate" />
 
   <!-- icons -->
   <browser:icon
      name="zmi_icon"
-     file="comments.png"
+     file="resources/comments.png"
      for="..interfaces.ICommentsRSSFeed" />
 
   <!-- styles -->
   <zojax:resourceinclude
      name="zojax-content-discussion.css" library="zojax"
-     type="stylesheet" file="styles.css" filetype="zrt" />
+     type="stylesheet" file="resources/styles.css" filetype="zrt" />
+
+  <!-- social api -->
+  <include file="socapi.zcml" />
+
+  <zojax:resourceinclude
+     name="jquery-oauthpopup-js"
+     library="js-social-logins" type="javascript"
+     require="jquery"
+     file="resources/jquery.oauthpopup.js"/>
 
 </configure>

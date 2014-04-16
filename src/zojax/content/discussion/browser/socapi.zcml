@@ -1,0 +1,25 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zojax.content.discussion">
+
+  <zojax:pagelet
+      name="twitter.html"
+      layout="page"
+      for="..interfaces.IContentDiscussionAware"
+      template="templates/social-popup.pt"
+      class=".socapi.Twitter"
+      permission="zojax.AddComment"
+      />
+
+  <zojax:pagelet
+      name="facebook.html"
+      layout="page"
+      for="..interfaces.IContentDiscussionAware"
+      template="templates/social-popup.pt"
+      class=".socapi.Facebook"
+      permission="zojax.AddComment"
+      />
+
+</configure>

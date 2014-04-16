@@ -123,7 +123,7 @@ Add comment
 Url should poing to anchor
 
     >>> user.url
-    'http://localhost/content/index.html#comments'
+    'http://localhost/content/index.html#guest'
 
     >>> print user.contents
     <html>

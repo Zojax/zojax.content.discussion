@@ -6,7 +6,10 @@
     <tbody>
       <tr>
   <td class="z-comment-avatar">
-    <img tal:attributes="src view/avatar" />
+    <img tal:condition="not:view/social_avatar" tal:attributes="src view/avatar" />
+    <tal:block condition="view/social_avatar">
+      <img tal:attributes="src view/social_avatar" alt="avatar" />
+    </tal:block>
   </td>
   <td class="z-comment-body">
     <div class="z-comment-info">
@@ -16,6 +19,7 @@
      tal:omit-tag="not:view/url"
      i18n:name="author"
      tal:content="view/author|string:Anonymous"></a>
+     <tal:block tal:condition="view/social_name">(<tal:block tal:content="view/social_name"></tal:block>)</tal:block>
         at
         <tal:block i18n:name="date" content="structure
           formatter:fancyDatetime,full:context/date"

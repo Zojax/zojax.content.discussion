@@ -1,0 +1,121 @@
+=============
+Browser tests
+=============
+
+    >>> from zope import interface, component, event
+    >>> from zope.testbrowser.testing import Browser
+    >>> from zope.lifecycleevent import ObjectCreatedEvent
+    >>> from zope.securitypolicy.interfaces import IPrincipalPermissionManager
+    >>> from zope.app.component.hooks import setSite
+    >>> from zojax.content.discussion import interfaces
+
+    >>> from zojax.content.discussion.tests.tests import Content
+
+
+    >>> root = getRootFolder()
+    >>> setSite(root)
+    >>> sm = root.getSiteManager()
+
+    >>> admin = Browser()
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+    >>> admin.handleErrors = False
+
+    >>> user = Browser()
+    >>> user.addHeader("Authorization", "Basic user:userpw")
+    >>> user.handleErrors = False
+
+    >>> anon = Browser()
+    >>> anon.handleErrors = False
+
+    >>> util = sm.getUtility(interfaces.ITwitterCommentingConfig)
+
+
+Enable twitter commenting
+-------------------------
+
+1. configlet
+
+    >>> admin.open("http://localhost/settings/")
+    >>> admin.getLink('Twitter').click()
+    >>> print admin.contents
+    <html>
+    ...
+      <label for="form-widgets-isVisible" title="">Enable Commenting via Twitter</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-isVisible-0"
+               name="form.widgets.isVisible:list"
+               class="radio-widget required bool-field"
+               value="true" type="radio" />
+        <span class="label">yes</span>
+    ...
+        <input id="form-widgets-isVisible-1"
+               name="form.widgets.isVisible:list"
+               class="radio-widget required bool-field"
+               value="false" checked="checked" type="radio" />
+        <span class="label">no</span>
+    ...
+      <label for="form-widgets-avatarUrl" title="">Avatar URL</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-avatarUrl"
+               name="form.widgets.avatarUrl"
+               class="text-widget required textline-field"
+               value="http://twitter.com/api/users/profile_image/"
+               type="text" />
+    ...
+      <label for="form-widgets-apiKey" title="">API key</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-apiKey"
+               name="form.widgets.apiKey"
+               class="text-widget required textline-field"
+               value="HSy2odxODt1WbXog40S9pQ" type="text" />
+    ...
+      <label for="form-widgets-apiSecret" title="">API secret</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-apiSecret"
+               name="form.widgets.apiSecret"
+               class="text-widget required textline-field"
+               value="zaiT5iK3spvHxnSWmKp75G0x24DfF4k5BuDqouNzVFo"
+               type="text" />
+    ...
+    <input id="form-buttons-save" name="form.buttons.save"
+           class="z-form-savebutton button-field" value="Save"
+           type="submit" />
+    ...
+    </html>
+
+enable commenting
+
+    >>> util.isVisible
+    False
+
+    >>> admin.getControl(name="form.widgets.isVisible:list").value = ['true']
+    >>> admin.getControl('Save').click()
+
+    >>> util.isVisible
+    True
+
+
+2. comments with approval
+
+add content
+
+    >>> content1 = Content()
+    >>> event.notify(ObjectCreatedEvent(content1))
+    >>> interface.alsoProvides(content1, interfaces.IDiscussible)
+    >>> root['content1'] = content1
+
+enable commenting with approval
+
+    >>> admin.open('http://localhost/content1/context.html')
+    >>> admin.getLink('Content').click()
+    >>> admin.getControl(name="content.discussion.widgets.status:list").value = ['approval']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+    >>> admin.getLink('View').click()
+
+    >>> sync()
+
+

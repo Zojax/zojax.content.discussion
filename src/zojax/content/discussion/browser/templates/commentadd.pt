@@ -1,0 +1,160 @@
+<a name="postComment" id="comment-form"></a>
+
+<div tal:condition="not:view/isPrincipal" class="social-networks clearfix">
+
+    <ul class="social-tabs" tal:condition="view/networks">
+        <li>
+            <a href="#guest" id="guest">Guest</a>
+        </li>
+        <li tal:condition="python: 'twitter' in view.networks">
+            <a href="#twitter" id="twitter">Twitter</a>
+        </li>
+        <li tal:condition="python: 'facebook' in view.networks">
+            <a href="#facebook" id="facebook">Facebook</a>
+        </li>
+    </ul>
+
+    <div id="twitter-pane" class="social-pane clearfix" style="display:none;"
+        tal:condition="view/twi">
+        <img src="http://twitter.com/api/users/profile_image/twitter"
+            tal:attributes="src python: view.twi['avatar']" />
+        <strong tal:content="python: view.twi['name']">User</strong>
+        You are commenting using your Twitter account
+        (<a href="#">Switch account</a>)
+    </div>
+
+    <div id="facebook-pane" class="social-pane clearfix" style="display:none;"
+        tal:condition="view/fb">
+        <img src="http://graph.facebook.com/facebook/picture"
+            tal:attributes="src python: view.fb['avatar']" />
+        <strong tal:content="python: view.fb['name']">User</strong>
+        You are commenting using your Facebook account
+        (<a href="#">Switch account</a>)
+    </div>
+
+    <script type="text/javascript">
+
+        var switchTabs = function(item) {
+            $(".social-tabs li").removeClass("active");
+            item.parent().addClass("active");
+
+            var currid = item.attr('id');
+            var yourname = $('#discussion-widgets-authorName').parent().parent();
+
+            $('.social-pane').hide();
+
+            if ( currid == 'guest' ) {
+                yourname.show();
+            } else {
+                yourname.hide();
+                $('#'+currid+'-pane').show();
+            }
+
+            window.location.hash = currid;
+
+        }
+
+        //social_type: 1 - twitter, 2 - facebook
+        var social_post = function(social_username, social_type) {
+            $('#discussion-widgets-authorName').val(social_username);
+            $('#discussion-widgets-social_type').attr('value', social_type);
+            return true;
+        }
+
+        $(document).ready( function() {
+
+            if (window.location.hash) {
+                switchTabs($(window.location.hash));
+            } else {
+                $('#guest').parent().addClass("active");
+            }
+
+            $('#guest').bind('click', function () {
+                switchTabs($(this));
+                return false;
+            });
+
+            $('#twitter').bind('click', function () {
+                switchTabs($(this));
+
+                <tal:block condition="not: view/twi">
+                $.oauthpopup({
+                    path: 'twitter.html',
+                    callback: function(){
+                        window.location.reload();
+                    }
+                });
+                </tal:block>
+
+                return false;
+            });
+
+            $('#facebook').bind('click', function () {
+                switchTabs($(this));
+
+                <tal:block condition="not: view/fb">
+                $.oauthpopup({
+                    path: 'facebook.html',
+                    callback: function(){
+                        window.location.reload();
+                    }
+                });
+                </tal:block>
+
+                return false;
+            });
+
+            $('#twitter-pane a').bind('click', function () {
+                $.oauthpopup({
+                    path: 'twitter.html?logout=true',
+                    callback: function(){
+                        window.location.reload();
+                    }
+                });
+                return false;
+            });
+
+            $('#facebook-pane a').bind('click', function () {
+                $.oauthpopup({
+                    path: 'facebook.html?logout=true',
+                    callback: function(){
+                        window.location.reload();
+                    }
+                });
+                return false;
+            });
+
+            $('#discussion').submit(function () {
+                var tab = 'guest';
+                var type = 1, name;
+
+                if (window.location.hash) {
+
+                    if (window.location.hash != 'guest') {
+                        name = $(window.location.hash+'-pane strong').text();
+                        if (window.location.hash == '#twitter') {
+                            type = 1;
+                            tab = 'twitter';
+                        }
+                        if (window.location.hash == '#facebook') {
+                            type = 2;
+                            tab = 'facebook';
+                        }
+                    }
+
+                    if (name) {
+                        social_post(name, type);
+                    }
+                }
+
+                this.action = document.location.pathname + '?tab=' + tab + document.location.hash || '#guest';
+
+            });
+        });
+
+    </script>
+
+</div>
+
+<tal:block content="structure view/@@pagelet/form.view" />
+

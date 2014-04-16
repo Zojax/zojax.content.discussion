@@ -48,7 +48,7 @@
   }
 
   .z-content-discussion #discussion {
-    margin-top: 2em;
+    /*margin-top: 2em;*/
   }
 
   .z-content-discussion .z-form-label {
@@ -69,6 +69,71 @@
 
   .discussion-widgets-approved {
     display: none;
+  }
+
+  ul.social-tabs {
+    border-bottom: 1px solid #b0c7dd;
+    float: left;
+    list-style: none outside none;
+    margin: 0;
+    width: 100%;
+  }
+  ul.social-tabs li {
+    float: left;
+    margin-bottom: -1px;
+    padding: 0;
+  }
+  .social-tabs > li > a {
+    border: 1px solid #B0C7DD;
+    border-radius: 4px 4px 0 0;
+    float: left;
+    margin-right: 5px;
+    outline: medium none;
+    padding: 8px 12px;
+  }
+  .social-tabs > li.active > a {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #f8f8f8;
+    font-weight: bold;
+  }
+
+  #discussion h1.z-form-label {
+    display: none;
+  }
+
+  .social-pane {
+    background-color: #f8f8f8;
+    clear: both;
+    padding: 15px;
+  }
+  .social-pane img {
+    float: left;
+    padding-right: 15px;
+    width: 48px;
+  }
+  .social-pane strong {
+    color: #d11d1d;
+    display: block;
+    font-size: 14px;
+    padding-top: 7px;
+  }
+
+  a#comment-form {
+    display: block;
+    margin-top: 50px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    content: "";
+    display: table;
+  }
+  .clearfix:after {
+    clear: both;
+  }
+  /* for IE6-7 */
+  .clearfix {
+    zoom: 1;
   }
 
 }

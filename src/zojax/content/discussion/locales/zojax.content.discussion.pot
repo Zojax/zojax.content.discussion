@@ -37,27 +37,27 @@ msgstr ""
 msgid "Comment added to content object."
 msgstr ""
 
-#: src/zojax/content/discussion/browser/comment.pt:21
+#: src/zojax/content/discussion/browser/templates/comment.pt:21
 msgid "Posted by ${author} at ${date} ${reply_link}"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/comment.pt:22
+#: src/zojax/content/discussion/browser/templates/comment.pt:22
 msgid "Reply"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/commentselement.pt:10
+#: src/zojax/content/discussion/browser/templates/commentselement.pt:10
 msgid "Comments (${length})"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/commentselement.pt:4
+#: src/zojax/content/discussion/browser/templates/commentselement.pt:4
 msgid "Comments rss feed"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/delete.pt:12
+#: src/zojax/content/discussion/browser/templates/delete.pt:12
 msgid "Delete"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/delete.pt:2
+#: src/zojax/content/discussion/browser/templates/delete.pt:2
 msgid "Are you sure you want remove this comment?"
 msgstr ""
 
@@ -65,15 +65,15 @@ msgstr ""
 msgid "Comment has been deleted."
 msgstr ""
 
-#: src/zojax/content/discussion/browser/edititem.pt:16
+#: src/zojax/content/discussion/browser/templates/edititem.pt:16
 msgid "(Configure)"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/manage.pt:14
+#: src/zojax/content/discussion/browser/templates/manage.pt:14
 msgid "Edit"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/manage.pt:23
+#: src/zojax/content/discussion/browser/templates/manage.pt:23
 msgid "There are no comments for this content."
 msgstr ""
 
@@ -102,7 +102,7 @@ msgid "Reply to this comment"
 msgstr ""
 
 #: src/zojax/content/discussion/browser/post.py:130
-#: src/zojax/content/discussion/browser/delete.pt:9
+#: src/zojax/content/discussion/browser/templates/delete.pt:9
 msgid "Cancel"
 msgstr ""
 
@@ -128,31 +128,31 @@ msgstr ""
 msgid "Reply to"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/recentcomments.pt:21
+#: src/zojax/content/discussion/browser/templates/recentcomments.pt:21
 msgid "Unknown"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/recentcomments.pt:22
+#: src/zojax/content/discussion/browser/templates/recentcomments.pt:22
 msgid "on"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/recentcomments.pt:4
+#: src/zojax/content/discussion/browser/templates/recentcomments.pt:4
 msgid "Recent comments rss feed"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/template.pt:11
+#: src/zojax/content/discussion/browser/templates/template.pt:11
 msgid "View comments"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/template.pt:14
+#: src/zojax/content/discussion/browser/templates/template.pt:14
 msgid "Use your profile settings if you would like to stop receiving updates on ${title}"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/template.pt:2
+#: src/zojax/content/discussion/browser/templates/template.pt:2
 msgid "${author} replied to ${url}"
 msgstr ""
 
-#: src/zojax/content/discussion/browser/template.pt:5
+#: src/zojax/content/discussion/browser/templates/template.pt:5
 msgid "Comment:"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 #: src/zojax/content/discussion/notifications.py:36
 #: src/zojax/content/discussion/notifications.py:44
 #: src/zojax/content/discussion/configure.zcml:61
-#: src/zojax/content/discussion/browser/recentcomments.pt:10
+#: src/zojax/content/discussion/browser/templates/recentcomments.pt:10
 msgid "Recent comments"
 msgstr ""
 

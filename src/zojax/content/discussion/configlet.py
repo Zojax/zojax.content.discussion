@@ -23,10 +23,11 @@ from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zojax.content.discussion.interfaces import IContentDiscussionAware
 from zojax.content.discussion.cache import CommentsTag
 
-from  interfaces import IContentDiscussionConfig, \
-                 IContentDiscussionConfiglet
+from  interfaces import IContentDiscussionConfig, IContentDiscussionConfiglet
 
 logger = logging.getLogger('zojax.content.discussion (configlet)')
+
+
 
 class ContentDiscussionConfiglet(object):
     pass

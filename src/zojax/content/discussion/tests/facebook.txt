@@ -1,0 +1,111 @@
+=============
+Browser tests
+=============
+
+    >>> from zope import interface, component, event
+    >>> from zope.testbrowser.testing import Browser
+    >>> from zope.lifecycleevent import ObjectCreatedEvent
+    >>> from zope.securitypolicy.interfaces import IPrincipalPermissionManager
+    >>> from zope.app.component.hooks import setSite
+    >>> from zojax.content.discussion import interfaces
+
+    >>> from zojax.content.discussion.tests.tests import Content
+
+
+    >>> root = getRootFolder()
+    >>> setSite(root)
+    >>> sm = root.getSiteManager()
+
+    >>> admin = Browser()
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+    >>> admin.handleErrors = False
+
+    >>> user = Browser()
+    >>> user.addHeader("Authorization", "Basic user:userpw")
+    >>> user.handleErrors = False
+
+    >>> anon = Browser()
+    >>> anon.handleErrors = False
+
+    >>> util = sm.getUtility(interfaces.IFacebookCommentingConfig)
+
+
+Enable facebook commenting
+-------------------------
+
+1. configlet
+
+    >>> admin.open("http://localhost/settings/")
+    >>> admin.getLink('Facebook').click()
+    >>> print admin.contents
+    <html>
+    ...
+      <label for="form-widgets-isVisible" title="">Enable Commenting via Facebook</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-isVisible-0"
+               name="form.widgets.isVisible:list"
+               class="radio-widget required bool-field"
+               value="true" type="radio" />
+        <span class="label">yes</span>
+    ...
+        <input id="form-widgets-isVisible-1"
+               name="form.widgets.isVisible:list"
+               class="radio-widget required bool-field"
+               value="false" checked="checked" type="radio" />
+        <span class="label">no</span>
+    ...
+      <label for="form-widgets-avatarUrl" title="">Avatar URL</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-avatarUrl"
+               name="form.widgets.avatarUrl"
+               class="text-widget required textline-field"
+               value="http://graph.facebook.com/" type="text" />
+    ...
+      <label for="form-widgets-appID" title="">App ID</label>
+      <span class="z-form-fieldRequired">&nbsp;</span>
+    ...
+        <input id="form-widgets-appID" name="form.widgets.appID"
+               class="text-widget required textline-field"
+               value="1400897446847096" type="text" />
+    ...
+    <input id="form-buttons-save" name="form.buttons.save"
+           class="z-form-savebutton button-field" value="Save"
+           type="submit" />
+    ...
+    </html>
+
+
+enable commenting
+
+    >>> util.isVisible
+    False
+
+    >>> admin.getControl(name="form.widgets.isVisible:list").value = ['true']
+    >>> admin.getControl('Save').click()
+
+    >>> util.isVisible
+    True
+
+
+2. comments with approval
+
+add content
+
+    >>> content2 = Content()
+    >>> event.notify(ObjectCreatedEvent(content2))
+    >>> interface.alsoProvides(content2, interfaces.IDiscussible)
+    >>> root['content2'] = content2
+
+enable commenting with approval
+
+    >>> admin.open('http://localhost/content2/context.html')
+    >>> admin.getLink('Content').click()
+    >>> admin.getControl(name="content.discussion.widgets.status:list").value = ['approval']
+    >>> admin.getControl(name="content.edit.buttons.save").click()
+    >>> admin.getLink('View').click()
+
+    >>> sync()
+
+

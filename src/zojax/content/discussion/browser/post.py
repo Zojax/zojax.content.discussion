@@ -15,12 +15,13 @@
 
 $Id$
 """
-import cgi, pytz, time
+import cgi
+import pytz
+import time
 from datetime import datetime
 
 from z3c.form.interfaces import HIDDEN_MODE
 
-from zope import interface
 from zope.app.http.httpdate import build_http_date
 from zope.event import notify
 from zope.component import getUtility
@@ -31,16 +32,17 @@ from zope.app.security.interfaces import IAuthentication
 
 from zojax.cache.view import cache
 from zojax.cache.keys import PrincipalAndContext
-from zojax.cache.timekey import TimeKey, each30minutes
 from zojax.cache.interfaces import DoNotCache
 
 from zojax.layoutform import button, Fields, PageletForm
 from zojax.layoutform.interfaces import ICancelButton
+from zojax.resourcepackage.library import include
 from zojax.statusmessage.interfaces import IStatusMessage
 
-from zojax.content.discussion.comment import Comment
-from zojax.content.discussion.interfaces import _, IComment, IContentDiscussion
-from zojax.content.discussion.utils import getVariablesForCookie, getAthorFromCookie
+from ..comment import Comment
+from ..interfaces import _, IComment, IContentDiscussion, ISocialComment, \
+    ITwitterCommentingConfig, IFacebookCommentingConfig
+from ..utils import getVariablesForCookie, getAthorFromCookie
 
 
 def PostCommentKey(object, instance, *args, **kw):
@@ -70,16 +72,30 @@ class PostCommentForm(PageletForm):
 
     @property
     def fields(self):
-        fields = Fields(IComment)
-        fields['approved'].mode = HIDDEN_MODE
-        fields['approved'].mode = HIDDEN_MODE
-        if self.isPrincipal():
-            fields = fields.omit('captcha', 'authorName')
+        if self.networks and self.discussion.status == 4:
+            fields = Fields(ISocialComment).omit(
+                'social_avatar_url', 'social_name')
+            fields['approved'].mode = HIDDEN_MODE
+            fields['social_type'].mode = HIDDEN_MODE
+            fields['facebook_id'].mode = HIDDEN_MODE
+            fields['twitter_id'].mode = HIDDEN_MODE
+            fields['captcha'].field.title = u'Caption'
+            if self.isPrincipal():
+                fields = fields.omit(
+                    'captcha', 'authorName', 'facebook_id', 'social_type', 'twitter_id')
+        else:
+            fields = Fields(IComment)
+            fields['approved'].mode = HIDDEN_MODE
+            if self.isPrincipal():
+                fields = fields.omit('captcha', 'authorName')
 
         return fields
 
     def updateWidgets(self):
         super(PostCommentForm, self).updateWidgets()
+
+        include('js-social-logins')
+
         if not self.isPrincipal() and getAthorFromCookie(self.request):
             # NOTE: get name from cookie
             self.widgets['authorName'].value = getAthorFromCookie(self.request)
@@ -105,10 +121,27 @@ class PostCommentForm(PageletForm):
             if 'authorName' in data:
                 comment.authorName = data['authorName']
 
+            tab = 'guest'
+            # TODO: check configlets
+            if 'social_type' in data and data['social_type']:
+                comment.social_type = data['social_type']
+                comment.social_name = comment.authorName
+                if comment.social_type == 1:
+                    comment.twitter_id = self.request.cookies['screen_name']
+                    comment.social_avatar_url = getUtility(
+                        ITwitterCommentingConfig).avatarUrl + comment.twitter_id
+                    tab = 'twitter'
+                elif comment.social_type == 2:
+                    comment.facebook_id = self.request.cookies['facebook_id']
+                    comment.social_avatar_url = getUtility(
+                        IFacebookCommentingConfig).avatarUrl + comment.facebook_id + '/picture'
+                    tab = 'facebook'
+            else:
                 # NOTE: set cookie for anon
                 if not self.isPrincipal():
                     cookie_var = getVariablesForCookie(request)
-                    expires = build_http_date(time.time() + 30000000) #347 days
+                    # 347 days
+                    expires = build_http_date(time.time() + 30000000)
                     request.response.setCookie(cookie_var['name'],
                                                data['authorName'],
                                                path=cookie_var['path'],
@@ -123,7 +156,30 @@ class PostCommentForm(PageletForm):
             notify(ObjectModifiedEvent(comment))
 
             IStatusMessage(request).add(msg)
-            self.redirect('%s#comments'%request.getURL())
+            # self.redirect('%s#comments'%request.getURL())
+            # self.redirect('%s?tab=%s#comment-form' % (request.getURL(), tab))
+            self.redirect('%s#%s' % (request.getURL(), tab))
+
+    def update(self):
+        super(PostCommentForm, self).update()
+
+        request = self.request
+        self.twi = None
+        self.fb = None
+
+        # Twitter
+        # screen_name, tw_name, user_id
+        if request.has_key('screen_name') and request.has_key('tw_name'):
+            avatar = "%s%s" % (
+                getUtility(ITwitterCommentingConfig).avatarUrl, request['screen_name'])
+            self.twi = dict(avatar=avatar, name=request['tw_name'])
+
+        # Facebook
+        # facebook_id, fb_author
+        if request.has_key('facebook_id') and request.has_key('fb_author'):
+            avatar = "%s%s/picture" % (
+                getUtility(IFacebookCommentingConfig).avatarUrl, request['facebook_id'])
+            self.fb = dict(avatar=avatar, name=request['fb_author'])
 
     def isAvailable(self):
         return self.postsAllowed
@@ -135,6 +191,23 @@ class PostCommentForm(PageletForm):
             principal = None
 
         return bool(principal)
+
+    @property
+    def networks(self):
+        result = []
+
+        if getUtility(ITwitterCommentingConfig).isVisible:
+            result.append('twitter')
+
+        if getUtility(IFacebookCommentingConfig).isVisible:
+            result.append('facebook')
+
+        return result
+
+    @property
+    def action(self):
+        """See interfaces.IInputForm"""
+        return self.request.getURL() + '#comment-form'
 
     @cache('content.discussion.reply', PostCommentKey, PrincipalAndContext)
     def updateAndRender(self):
@@ -209,7 +282,8 @@ class PostComment(PageletForm):
                 # NOTE: set cookie for anon
                 if not self.isPrincipal():
                     cookie_var = getVariablesForCookie(request)
-                    expires = build_http_date(time.time() + 30000000) #347 days
+                    # 347 days
+                    expires = build_http_date(time.time() + 30000000)
                     request.response.setCookie(cookie_var['name'],
                                                data['authorName'],
                                                path=cookie_var['path'],
@@ -224,7 +298,7 @@ class PostComment(PageletForm):
             notify(ObjectModifiedEvent(comment))
 
             IStatusMessage(request).add(msg)
-            self.redirect('%s#comments'%request.getURL())
+            self.redirect('%s#comments' % request.getURL())
 
     def isPrincipal(self):
         try:
@@ -237,4 +311,3 @@ class PostComment(PageletForm):
     @button.buttonAndHandler(_('Cancel'), name='cancel', provides=ICancelButton)
     def handleCancel(self, action):
         self.redirect('.')
-

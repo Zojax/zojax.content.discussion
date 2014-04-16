@@ -31,7 +31,7 @@ from zojax.statusmessage.interfaces import IStatusMessage
 from zojax.wizard.step import WizardStep
 
 from ..catalog import getCatalog
-from ..configlet import logger
+#from ..configlet import logger
 from ..interfaces import _
 
 
@@ -108,4 +108,55 @@ class NotApprovedCommentsView(WizardStep):
         oid = getUtility(IIntIds).getId(comment)
 
         return dict(author=author, author_url=author_url, oid=oid)
+
+
+class ApprovedCommentsView(NotApprovedCommentsView):
+
+    title = _(u'Approved Comments')
+    label = _(u'Here you can manage already approved comments')
+
+    def update(self):
+        super(ApprovedCommentsView, self).update()
+
+        request = self.request
+        context = removeAllProxies(self.context)
+
+        if context is None:
+            return
+
+        ids = getUtility(IIntIds)
+        oids = request.get('form.checkbox.id', ())
+
+        if 'form.button.remove' in request:
+            if not oids:
+                IStatusMessage(request).add(
+                    _('You have not selected any comment.'), 'warning')
+            else:
+                for oid in oids:
+                    try:
+                        comment = ids.getObject(int(oid))
+                        del comment.__parent__[comment.__name__]
+                    except KeyError:
+                        pass
+
+                IStatusMessage(request).add(_('Selected comments have been removed.'))
+
+        elif 'form.button.reject' in request:
+            if not oids:
+                IStatusMessage(request).add(
+                    _('You have not selected any comment.'), 'warning')
+            else:
+                for oid in oids:
+                    comment = ids.getObject(int(oid))
+                    comment.approved = False
+                    notify(ObjectModifiedEvent(comment))
+
+                IStatusMessage(request).add(_('Selected comments have been rejected.'))
+
+        catalog = getCatalog()
+        self.results = catalog.search(approved=(True,))
+
+        # TODO: return all approved comments with Batch help
+        #self.batch = Batch(results, size=20, context=context, request=request)
+
 

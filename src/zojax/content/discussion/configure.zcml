@@ -101,18 +101,47 @@
       class="zojax.controlpanel.browser.wizard.ConfigletEditWizard"
       permission="zojax.Configure" />
 
-  <!-- configlet rebuild -->
+  <!-- configlet not approved comments -->
   <zojax:pagelet
      name="not_approved_comments"
      type="wizard.step"
-     title="Manage Comments"
-     label="Not Approved Comments"
+     title="Not Approved Comments"
+     label="Manage Not Approved Comments"
      for=".interfaces.IContentDiscussionConfiglet
           zojax.controlpanel.browser.interfaces.IConfigletEditWizard"
-     template="browser/notapprovedcomments.pt"
+     template="browser/templates/notapprovedcomments.pt"
      class=".browser.configlet.NotApprovedCommentsView"
      permission="zojax.Configure"
      weight="200" />
+
+  <!-- configlet approved comments -->
+  <zojax:pagelet
+     name="approved_comments"
+     type="wizard.step"
+     title="Approved Comments"
+     label="Manage Approved Comments"
+     for=".interfaces.IContentDiscussionConfiglet
+          zojax.controlpanel.browser.interfaces.IConfigletEditWizard"
+     template="browser/templates/approvedcomments.pt"
+     class=".browser.configlet.ApprovedCommentsView"
+     permission="zojax.Configure"
+     weight="250" />
+
+  <!-- configre twitter commenting -->
+  <zojax:configlet
+     name="content.discussion.twitter"
+     schema=".interfaces.ITwitterCommentingConfig"
+     title="Twitter"
+     description="Twitter Social Commenting configuration.
+                  https://apps.twitter.com/app/new" />
+
+  <!-- configre facebook commenting -->
+  <zojax:configlet
+     name="content.discussion.facebook"
+     schema=".interfaces.IFacebookCommentingConfig"
+     title="Facebook"
+     description="Facebook Social Commenting configuration.
+                  https://developers.facebook.com/apps" />
 
   <adapter factory=".configlet.getConfig" />
   <subscriber handler=".configlet.configletModified" />
