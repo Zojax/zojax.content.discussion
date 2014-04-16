@@ -1,4 +1,4 @@
-##############################################################################
+#
 #
 # Copyright (c) 2009 Zope Foundation and Contributors.
 # All Rights Reserved.
@@ -10,7 +10,7 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE.
 #
-##############################################################################
+#
 """
 
 $Id$
@@ -23,15 +23,15 @@ from datetime import datetime
 from z3c.form.interfaces import HIDDEN_MODE
 
 from zope.app.http.httpdate import build_http_date
+from zope.app.security.interfaces import IAuthentication
 from zope.event import notify
 from zope.component import getUtility
 from zope.security import checkPermission
 from zope.interface.common.idatetime import ITZInfo
 from zope.lifecycleevent import ObjectModifiedEvent
-from zope.app.security.interfaces import IAuthentication
+from zope.traversing.api import getPath
 
 from zojax.cache.view import cache
-from zojax.cache.keys import PrincipalAndContext
 from zojax.cache.interfaces import DoNotCache
 
 from zojax.layoutform import button, Fields, PageletForm
@@ -52,6 +52,14 @@ def PostCommentKey(object, instance, *args, **kw):
             (len(instance.forms) or len(instance.subforms)):
         raise DoNotCache()
     return ()
+
+
+def PrincipalAndContext(object, instance, *args, **kw):
+    return {'principal': instance.request.principal.id,
+            'context': getPath(instance.context),
+            'allowPost': checkPermission('zojax.AddComment', instance.context),
+            'facebook_id': instance.request.get('facebook_id', ''),
+            'screen_name': instance.request.get('screen_name', '')}
 
 
 class PostCommentForm(PageletForm):
