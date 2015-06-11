@@ -170,7 +170,10 @@ def commentModified(comment, ev):
 def commentRemoved(comment, ev):
     comment = removeAllProxies(comment)
     catalog = removeAllProxies(getCatalog())
-    catalog.unindex_doc(getUtility(IIntIds).getId(comment))
+    try:
+        catalog.unindex_doc(getUtility(IIntIds).getId(comment))
+    except KeyError:
+        pass
 
 
 @component.adapter(ICommentsCatalog, IObjectAddedEvent)

@@ -62,8 +62,12 @@ def commentAddedHandler(comment, event):
 @component.adapter(IComment, IIntIdRemovedEvent)
 def commentRemovedHandler(comment, event):
     activity = getUtility(IActivity)
-    commentId = getUtility(IIntIds).getId(comment)
-    for rid in activity.search(object=comment.content, noSecurityChecks=True,
-                    type={'any_of': ('comment',)},
-                    commentId={'any_of': (commentId,)}).uids:
-        activity.remove(rid)
+    try:
+        commentId = getUtility(IIntIds).getId(comment)
+        for rid in activity.search(object=comment.content,
+                                   noSecurityChecks=True,
+                                   type={'any_of': ('comment',)},
+                                   commentId={'any_of': (commentId,)}).uids:
+            activity.remove(rid)
+    except KeyError:
+        pass
