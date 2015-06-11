@@ -32,7 +32,7 @@ from zojax.wizard.step import WizardStep
 
 from ..catalog import getCatalog
 #from ..configlet import logger
-from ..interfaces import _
+from ..interfaces import _, IComment
 
 
 class NotApprovedCommentsView(WizardStep):
@@ -88,6 +88,9 @@ class NotApprovedCommentsView(WizardStep):
 
         author = ''
         author_url = ''
+
+        if not IComment.providedBy(comment):
+            return
 
         if getattr(comment, 'authorName'):
             author = comment.authorName

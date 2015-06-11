@@ -16,6 +16,7 @@
       <tbody>
       <tal:block tal:repeat="comment comments">
         <tr tal:define="info python: view.getInfo(comment)"
+            tal:condition="info"
             tal:attributes="class python:repeat['comment'].odd() and 'even' or 'odd'">
           <td>
             <input type="checkbox" name="form.checkbox.id:list"

@@ -40,9 +40,12 @@ class CommentsFeed(RSS2Feed):
     def items(self):
         request = self.request
         auth = getUtility(IAuthentication)
-        comments = getCatalog().search(contexts=(self.context,))[:15]
+        comments = getCatalog().search(contexts=(self.context,), approved=(True,))[:15]
 
         for comment in comments:
+            if not comment:
+                continue
+
             url = absoluteURL(comment.content, request)
 
             info = {
